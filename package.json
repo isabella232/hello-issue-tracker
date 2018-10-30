@@ -1,0 +1,42 @@
+{
+    "name": "PLUGIN_DOMAIN",
+    "dependencies": {},
+    "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.4",
+        "babel-preset-env": "^1.7.0",
+        "babel-register": "^6.26.0",
+        "fs": "0.0.1-security",
+        "gulp": "^3.9.1",
+        "gulp-autoprefixer": "^6.0.0",
+        "gulp-concat": "^2.6.1",
+        "gulp-debug": "^4.0.0",
+        "gulp-livereload": "^3.8.1",
+        "gulp-load-plugins": "^1.5.0",
+        "gulp-minify-css": "^1.2.4",
+        "gulp-rename": "^1.2.3",
+        "gulp-sass": "^4.0.1",
+        "gulp-sass-import-json": "^1.0.2",
+        "gulp-svgmin": "^1.2.3",
+        "gulp-uglify": "^2.0.1",
+        "gulp-watch": "^5.0.0",
+        "install": "^0.12.2",
+        "json-loader": "^0.5.7",
+        "merge-stream": "^1.0.1",
+        "webpack": "^3.12.0",
+        "webpack-stream": "^3.2.0"
+    },
+    "author": "PLUGIN_AUTHOR AUTHOR_URI",
+    "license": "GPL-3.0+",
+    "homepage": "PLUGIN_URI",
+    "scripts": {
+        "start": "gulp"
+    },
+    "babel": {
+        "presets": [
+            "env"
+        ]
+    },
+    "version": "0.0.1",
+    "main": "gulpfile.babel.js"
+}
