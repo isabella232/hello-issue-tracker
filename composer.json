@@ -1,18 +1,18 @@
 {
-    "name": "PLUGIN_DOMAIN",
-    "description": "PLUGIN_DESCRIPTION",
+    "name": "HelloIssueTracker",
+    "description": "A WordPress Plugin to create, edit and delete Gitlab Issues right from the WP-Admin",
     "keywords": [
         "wordpress",
         "plugin"
     ],
-    "version": "0.0.1",
-    "homepage": "PLUGIN_URI",
+    "version": "0.0.2",
+    "homepage": "https://github.com/nico-martin/hello-issue-tracker",
     "license": "GPL-3.0+",
     "authors": [
         {
-            "name": "PLUGIN_AUTHOR",
-            "email": "AUTHOR_EMAIL",
-            "homepage": "AUTHOR_URI"
+            "name": "Nico Martin / Say Hello GmbH",
+            "email": "nico@sayhello.chL",
+            "homepage": "https://sayhello.ch"
         }
     ],
     "type": "wordpress-plugin",

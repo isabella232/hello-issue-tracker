@@ -1,5 +1,5 @@
 {
-    "name": "PLUGIN_DOMAIN",
+    "name": "HelloIssueTracker",
     "dependencies": {},
     "devDependencies": {
         "babel-core": "^6.26.3",
@@ -26,9 +26,9 @@
         "webpack": "^3.12.0",
         "webpack-stream": "^3.2.0"
     },
-    "author": "PLUGIN_AUTHOR AUTHOR_URI",
+    "author": "Nico Martin / Say Hello GmbH https://sayhello.ch",
     "license": "GPL-3.0+",
-    "homepage": "PLUGIN_URI",
+    "homepage": "https://github.com/nico-martin/hello-issue-tracker",
     "scripts": {
         "start": "gulp"
     },
@@ -37,6 +37,6 @@
             "env"
         ]
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "gulpfile.babel.js"
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace PLUGIN_NAMESPACE;
+namespace HelloIssueTracker;
 
 class Assets {
 
