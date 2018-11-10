@@ -1,16 +1,17 @@
 <?php
 
-namespace AUTHOR_NAMESPACE\PLUGIN_NAMESPACE;
+namespace PLUGIN_NAMESPACE;
 
 class Assets {
 
-	public function add_assets() {
 
-		$script_version = PLUGIN_PREFIX_get_instance()->version;
-		$plugin_prefix  = PLUGIN_PREFIX_get_instance()->prefix;
+	public static function add_assets() {
+
+		$script_version = Plugin::version();
+		$plugin_prefix  = Plugin::prefix();
 
 		$min     = ! is_user_logged_in();
-		$dir_uri = plugin_dir_url( PLUGIN_PREFIX_get_instance()->file );
+		$dir_uri = plugin_dir_url( Plugin::file() );
 
 		/**
 		 * CSS
@@ -38,13 +39,13 @@ class Assets {
 		wp_add_inline_script( "{$plugin_prefix}-script", "var {$vars_prefx}Vars = {$vars};", 'before' );
 	}
 
-	public function add_admin_assets() {
+	public static function add_admin_assets() {
 
-		$script_version = PLUGIN_PREFIX_get_instance()->version;
-		$plugin_prefix  = PLUGIN_PREFIX_get_instance()->prefix;
+		$script_version = Plugin::version();
+		$plugin_prefix  = Plugin::prefix();
 
 		$min     = ! is_user_logged_in();
-		$dir_uri = plugin_dir_url( PLUGIN_PREFIX_get_instance()->file );
+		$dir_uri = plugin_dir_url( Plugin::file() );
 
 		wp_enqueue_style( "{$plugin_prefix}-admin-style", $dir_uri . 'assets/styles/admin' . ( $min ? '.min' : '' ) . '.css', [], $script_version );
 		wp_enqueue_script( "{$plugin_prefix}-admin-script", $dir_uri . 'assets/scripts/admin' . ( $min ? '.min' : '' ) . '.js', [ 'jquery' ], $script_version, true );

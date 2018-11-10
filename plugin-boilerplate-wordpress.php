@@ -16,14 +16,9 @@ add_action( 'init', function () {
 	load_plugin_textdomain( 'TEXT_DOMAIN', false, basename( dirname( __FILE__ ) ) . '/languages' );
 } );
 
-require_once 'classes/class-plugin.php';
-function PLUGIN_PREFIX_get_instance() {
-	return AUTHOR_NAMESPACE\PLUGIN_NAMESPACE\Plugin::get_instance( __FILE__, 'PLUGIN_PREFIX' );
-}
+require_once 'includes/class-plugin.php';
+PLUGIN_NAMESPACE\Plugin::initialize( __FILE__ );
 
-PLUGIN_PREFIX_get_instance();
-
-require_once 'classes/class-assets.php';
-add_action( 'wp_enqueue_scripts', [ 'SayHello\KaddzUMC\Assets', 'add_assets' ] );
-add_action( 'admin_enqueue_scripts', [ 'SayHello\KaddzUMC\Assets', 'add_admin_assets' ] );
-
+require_once 'includes/class-assets.php';
+add_action( 'wp_enqueue_scripts', [ 'PLUGIN_NAMESPACE\Assets', 'add_assets' ] );
+add_action( 'admin_enqueue_scripts', [ 'PLUGIN_NAMESPACE\Assets', 'add_admin_assets' ] );
