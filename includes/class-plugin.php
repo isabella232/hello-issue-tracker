@@ -68,4 +68,24 @@ class Plugin {
 	public static function file() {
 		return self::$file;
 	}
+
+	public static function options( $task = 'get', $values = [] ) {
+		$key = Plugin::prefix() . '-credentials';
+		if ( 'set' == $task ) {
+			return update_option( $key, $values );
+		} elseif ( 'delete' == $task ) {
+			return delete_option( $key );
+		}
+
+		return get_option( $key );
+	}
+
+	public static function get_option( $key ) {
+		$options = self::options();
+		if ( ! is_array( $options ) || ! array_key_exists( $key, $options ) ) {
+			return false;
+		}
+
+		return $options[ $key ];
+	}
 }

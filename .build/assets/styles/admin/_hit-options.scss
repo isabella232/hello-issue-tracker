@@ -1,0 +1,55 @@
+.hello-issue-tracker {
+	.hit-options {
+		margin-top: 20px;
+		background-color: #fff;
+		width: 100%;
+		max-width: 600px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+
+		&__title {
+			margin: 0;
+			padding: $padding;
+			border-bottom: 1px solid #e5e5e5;
+			font-size: 16px;
+			line-height: 1;
+			position: relative;
+			cursor: pointer;
+
+			&:after {
+				content: "\f142";
+				display: inline-block;
+				font: 400 20px/1 dashicons;
+				speak: none;
+				position: absolute;
+				top: 50%;
+				right: 10px;
+				transform: translateY(-50%);
+				transition: all 200ms;
+			}
+		}
+
+		&[data-hidden="true"] {
+			.hit-options {
+				&__title:after {
+					transform: translateY(-50%) rotate(180deg);
+				}
+				&__content {
+					display: none;
+				}
+			}
+		}
+
+		&__content {
+			margin: 0;
+			padding: $padding;
+		}
+
+		&__response {
+			background-color: #b70000;
+			color: #fff;
+			padding: $padding/2 $padding;
+			margin-bottom: $padding/2;
+		}
+	}
+}

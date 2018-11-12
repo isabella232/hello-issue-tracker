@@ -1,0 +1,56 @@
+.hello-issue-tracker {
+	.hit-issues {
+		margin-top: 20px;
+		background-color: #fff;
+		width: 100%;
+		max-width: 600px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+		position: relative;
+
+		&__options {
+			border-bottom: 1px solid #e5e5e5;
+			display: flex;
+			padding: $padding;
+		}
+
+		&__option {
+			display: flex;
+			align-items: center;
+			+ .hit-issues__option {
+				margin-left: $padding;
+			}
+			label {
+				margin-right: $padding/2;
+			}
+			select {
+				border-radius: 3px;
+				padding: $padding/2;
+				height: inherit;
+			}
+		}
+
+		&__list {
+			min-height: 400px;
+			position: relative;
+		}
+
+		&__loader {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			left: 0;
+			top: 0;
+			background-color: rgba(#fff, .8);
+			&:after {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				content: '';
+				font-size: 60px;
+				margin: -30px 0 0 -30px;
+				@include spinner(5px solid #000);
+			}
+		}
+	}
+}

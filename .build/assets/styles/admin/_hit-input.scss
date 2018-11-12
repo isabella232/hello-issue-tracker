@@ -1,0 +1,26 @@
+.hello-issue-tracker {
+
+	.hit-input {
+		padding: $padding 0;
+
+		&--align-right {
+			text-align: right;
+		}
+
+		&__label {
+			display: block;
+			font-weight: bold;
+		}
+
+		&__input {
+			margin-top: $padding/2;
+			width: 100%;
+			padding: $padding/2;
+			line-height: 1;
+			border: 1px solid #e5e5e5;
+			&:focus {
+				border-color: #000;
+			}
+		}
+	}
+}
