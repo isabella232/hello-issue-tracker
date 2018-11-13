@@ -1,0 +1,26 @@
+.hello-issue-tracker {
+	.hit-page {
+		margin-top: 20px;
+		display: flex;
+		position: relative;
+		align-items: flex-start;
+
+		&__side {
+			flex-basis: 45%;
+			min-width: 500px;
+			position: sticky;
+			top: $page-top;
+		}
+
+		&__main {
+			flex: 1 1 auto;
+		}
+
+		&__reset {
+			position: absolute;
+			right: 0;
+			top: 0;
+			transform: translateY(-250%);
+		}
+	}
+}

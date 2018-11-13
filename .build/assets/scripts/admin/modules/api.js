@@ -37,8 +37,16 @@ export const parse_issue = function (obj) {
 	for (const label of obj.labels) {
 		const regex = new RegExp(`${plugin.labelPrefix}([a-z0-9]*): `);
 		const match = regex.exec(label);
+		let index = 0;
 		if (match != null) {
 			obj['hit_label'][match[1]] = label.replace(match[0], '');
+			obj['labels'] = obj['labels'].filter(e => e !== label);
+		}
+	}
+
+	for (const key of ['author', 'type', 'priority']) {
+		if (!(key in obj['hit_label'])) {
+			obj['hit_label'][key] = '';
 		}
 	}
 	return obj;

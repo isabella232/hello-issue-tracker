@@ -4,6 +4,25 @@
   100% {
     transform: rotate(360deg); } }
 
+.hello-issue-tracker .hit-page {
+  margin-top: 20px;
+  display: flex;
+  position: relative;
+  align-items: flex-start; }
+  .hello-issue-tracker .hit-page__side {
+    flex-basis: 45%;
+    min-width: 500px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 104px; }
+  .hello-issue-tracker .hit-page__main {
+    flex: 1 1 auto; }
+  .hello-issue-tracker .hit-page__reset {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(-250%); }
+
 .hello-issue-tracker .hit-options {
   margin-top: 20px;
   background-color: #fff;
@@ -59,13 +78,10 @@
       border-color: #000; }
 
 .hello-issue-tracker .hit-issues {
-  margin-top: 20px;
   background-color: #fff;
-  width: 100%;
-  max-width: 600px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  position: relative; }
+  min-height: 400px; }
   .hello-issue-tracker .hit-issues__options {
     border-bottom: 1px solid #e5e5e5;
     display: flex;
@@ -81,9 +97,13 @@
       border-radius: 3px;
       padding: 0.4rem;
       height: inherit; }
-  .hello-issue-tracker .hit-issues__list {
-    min-height: 400px;
-    position: relative; }
+  .hello-issue-tracker .hit-issues__head {
+    width: 100%;
+    border-spacing: 0;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #f8f8f8; }
+    .hello-issue-tracker .hit-issues__head .hit-issue-list__item:first-child {
+      text-align: center; }
   .hello-issue-tracker .hit-issues__loader {
     position: absolute;
     bottom: 0;
@@ -109,3 +129,96 @@
       vertical-align: middle;
       box-sizing: border-box;
       animation: spinner 0.65s infinite linear; }
+  .hello-issue-tracker .hit-issues__list {
+    max-height: calc(100vh - 300px);
+    overflow: auto; }
+
+.hello-issue-tracker .hit-issue-list {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  cursor: pointer;
+  transition: all 400ms;
+  position: relative; }
+  .hello-issue-tracker .hit-issue-list__item {
+    padding: 0.8rem 0.4rem;
+    box-sizing: content-box; }
+    .hello-issue-tracker .hit-issue-list__item:nth-child(1), .hello-issue-tracker .hit-issue-list__item:nth-child(3), .hello-issue-tracker .hit-issue-list__item:nth-child(4) {
+      width: 12%; }
+    .hello-issue-tracker .hit-issue-list__item:nth-child(2) {
+      width: 64%; }
+  .hello-issue-tracker .hit-issue-list:before {
+    content: attr(data-state);
+    overflow: hidden;
+    -ms-writing-mode: tb-lr;
+        writing-mode: vertical-lr;
+    line-height: 15px;
+    color: #fff;
+    text-align: center;
+    font-size: .6rem;
+    width: 4px;
+    transition: all 200ms;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background-color: transparent; }
+  .hello-issue-tracker .hit-issue-list--opened:before {
+    background-color: #ff9c2f;
+    color: #ff9c2f; }
+  .hello-issue-tracker .hit-issue-list--closed:before {
+    background-color: #1aaa55;
+    color: #1aaa55; }
+  .hello-issue-tracker .hit-issue-list__title, .hello-issue-tracker .hit-issue-list__id {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    font-weight: 600; }
+  .hello-issue-tracker .hit-issue-list__id {
+    text-align: center; }
+  .hello-issue-tracker .hit-issue-list__created {
+    margin-top: 0.4rem;
+    display: block;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: .8rem; }
+    .hello-issue-tracker .hit-issue-list__created b {
+      font-weight: 700; }
+  .hello-issue-tracker .hit-issue-list__labels {
+    margin-top: 0.4rem;
+    display: inline-block; }
+    .hello-issue-tracker .hit-issue-list__labels:empty {
+      display: none; }
+  .hello-issue-tracker .hit-issue-list__id {
+    color: rgba(0, 0, 0, 0.1);
+    font-weight: 900;
+    font-size: 2.2rem;
+    transition: all 200ms;
+    vertical-align: middle !important; }
+  .hello-issue-tracker .hit-issue-list:hover {
+    background-color: rgba(248, 248, 248, 0.7); }
+    .hello-issue-tracker .hit-issue-list:hover .hit-issue-list__id {
+      color: rgba(0, 0, 0, 0.2); }
+    .hello-issue-tracker .hit-issue-list:hover:before {
+      width: 12px;
+      color: #fff; }
+
+.hello-issue-tracker .hit-issue-label {
+  display: inline-block;
+  background-color: #0073aa;
+  color: #fff;
+  line-height: 1;
+  padding: .6em 1em;
+  border-radius: 3px;
+  font-size: .7rem; }
+  .hello-issue-tracker .hit-issue-label:empty {
+    display: none; }
+  .hello-issue-tracker .hit-issue-label--small {
+    font-size: .6rem; }
+  .hello-issue-tracker .hit-issue-label--type-bug {
+    background-color: #ff9c2f; }
+  .hello-issue-tracker .hit-issue-label--type-bug {
+    background-color: #e3000b; }
+  .hello-issue-tracker .hit-issue-label--prio-high {
+    background-color: #e3000b; }
+  .hello-issue-tracker .hit-issue-label--prio-normal {
+    background-color: #ff9c2f; }

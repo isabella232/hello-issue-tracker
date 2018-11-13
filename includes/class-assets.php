@@ -65,11 +65,19 @@ class Assets {
 	}
 
 	public static function add_vars( $vars ) {
-		$vars['APIbase']     = Plugin::get_option( 'baseurl' );
-		$vars['repo']        = Plugin::get_option( 'repo_id' );
-		$vars['key']         = Plugin::get_option( 'key' );
-		$vars['labelPrefix'] = apply_filters( 'hit_label_prefix', 'wp_' );
+		$vars['APIbase']      = Plugin::get_option( 'baseurl' );
+		$vars['repo']         = Plugin::get_option( 'repo_id' );
+		$vars['key']          = Plugin::get_option( 'key' );
+		$vars['labelPrefix']  = apply_filters( 'hit_label_prefix', 'wp_' );
+		$vars['translations'] = self::get_translations();
 
 		return $vars;
+	}
+
+	public static function get_translations() {
+		return [
+			'opened' => __( 'Open', 'hit' ),
+			'closed' => __( 'Closed', 'hit' ),
+		];
 	}
 }

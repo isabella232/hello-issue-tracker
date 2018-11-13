@@ -17,8 +17,8 @@ class MenuPage {
 		<div class="wrap <?php echo Plugin::prefix(); ?>">
 			<h1><?php echo self::title(); ?></h1>
 			<?php
-			self::template_issues();
 			self::template_credentials();
+			self::template_issues();
 			?>
 		</div>
 		<?php
@@ -30,38 +30,54 @@ class MenuPage {
 		}
 
 		?>
-		<div class="hit-issues">
-			<form class="hit-issues__options">
-				<?php
-				$options = [
-					'state' => [
-						'title'   => __( 'Status', 'hit' ),
-						'choices' => [
-							'opened' => __( 'Open', 'hit' ),
-							'closed' => __( 'Closed', 'hit' ),
-						]
-					],
-				];
+		<div class="hit-page">
+			<a class="hit-page__reset" href="admin.php?action=hit_remove_settings&site=<?php echo get_current_blog_id(); ?>"><?php _e( 'Reset credentials', 'hit' ); ?></a>
+			<div class="hit-page__side hit-issues">
+				<form class="hit-issues__options">
+					<?php
+					$options = [
+						'state' => [
+							'title'   => __( 'Status', 'hit' ),
+							'choices' => [ 'opened', 'closed' ]
+						],
+					];
 
-				foreach ( $options as $option_key => $option ) {
-					echo "<div class='hit-issues__option'>";
-					echo "<label for='hit-issues-option-{$option_key}'>{$option['title']}</label>";
-					echo "<select name='{$option_key}' id='hit-issues-option-{$option_key}'>";
-					foreach ( $option['choices'] as $choice_key => $label ) {
-						echo "<option value='{$choice_key}'>{$label}</option>";
+					foreach ( $options as $option_key => $option ) {
+						echo "<div class='hit-issues__option'>";
+						echo "<label for='hit-issues-option-{$option_key}'>{$option['title']}</label>";
+						echo "<select name='{$option_key}' id='hit-issues-option-{$option_key}'>";
+						foreach ( $option['choices'] as $choice_key ) {
+							$translations = Assets::get_translations();
+							$label        = $choice_key;
+							if ( array_key_exists( $choice_key, $translations ) ) {
+								$label = $translations[ $choice_key ];
+							}
+							echo "<option value='{$choice_key}'>{$label}</option>";
+						}
+						echo '</select>';
+						echo '</div>';
 					}
-					echo '</select>';
-					echo '</div>';
-				}
-				?>
-			</form>
-			<ul class="hit-issues__list"></ul>
-			<div class="hit-issues__loader"></div>
+					?>
+				</form>
+				<div class="hit-issues__head hit-issue-list">
+					<div class="hit-issue-list__item"><?php _e( 'ID', 'hit' ); ?></div>
+					<div class="hit-issue-list__item"><?php _e( 'Title', 'hit' ); ?></div>
+					<div class="hit-issue-list__item"><?php _e( 'Type', 'hit' ); ?></div>
+					<div class="hit-issue-list__item"><?php _e( 'Priority', 'hit' ); ?></div>
+				</div>
+				<div class="hit-issues__list"></div>
+				<div class="hit-issues__loader"></div>
+			</div>
+			<div class="hit-page__main"></div>
 		</div>
 		<?php
 	}
 
 	public static function template_credentials() {
+
+		if ( Plugin::options() ) {
+			return;
+		}
 
 		$fields = [
 			'repo' => __( 'Gitlab Repository URL', 'hit' ),
@@ -70,13 +86,9 @@ class MenuPage {
 
 		$disabled = '';
 		$datas    = [];
-		if ( Plugin::options() ) {
-			$disabled = 'disabled="disabled"';
-			$datas    = Plugin::options();
-		}
 
 		?>
-		<div class="hit-options" data-hidden="<?php echo( Plugin::options() ? 'true' : 'false' ); ?>">
+		<div class="hit-options" data-hidden="false">
 			<h2 class="hit-options__title"><?php _e( 'Credentials', 'sht' ); ?></h2>
 			<form class="hit-options__content" id="hit-credentials-form">
 				<div class="hit-options__response" style="display: none;"></div>
@@ -96,13 +108,7 @@ class MenuPage {
 				?>
 				<input type="hidden" name="action" value="hit_save_settings"/>
 				<div class="hit-input hit-input--align-right">
-					<?php
-					if ( Plugin::options() ) {
-						echo '<a class="hit-input__reset" href="admin.php?action=hit_remove_settings&site=' . get_current_blog_id() . '">' . __( 'Reset credentials', 'hit' ) . '</a>';
-					} else {
-						echo '<button class="hit-input__button button button-primary" type="submit">' . __( 'Save credentials', 'hit' ) . '</button>';
-					}
-					?>
+					<button class="hit-input__button button button-primary" type="submit"><?php _e( 'Save credentials', 'hit' ); ?></button>
 				</div>
 			</form>
 		</div>

@@ -1,6 +1,8 @@
 {
     "name": "HelloIssueTracker",
-    "dependencies": {},
+    "dependencies": {
+        "moment": "^2.22.2"
+    },
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.4",
@@ -37,6 +39,6 @@
             "env"
         ]
     },
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "gulpfile.babel.js"
 }

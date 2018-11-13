@@ -105,7 +105,7 @@ var plugin = exports.plugin = pluginObject;
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = {}
+module.exports = {"colors":{"black":{"base":"#000","dark":"#000","light":"#7C7C7B"},"grey":{"base":"#e5e5e5","light":"#f8f8f8"},"white":{"base":"#fff"},"blue":{"base":"#0073aa"},"red":{"base":"#e3000b"},"green":{"base":"#1aaa55"},"orange":{"base":"#ff9c2f"}}}
 
 /***/ })
 /******/ ]);

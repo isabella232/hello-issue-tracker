@@ -4,7 +4,7 @@ Plugin Name: Hello Issue Tracker
 Plugin URI: https://github.com/nico-martin/hello-issue-tracker
 Description: A WordPress Plugin to create, edit and delete Gitlab Issues right from the WP-Admin
 Author: Nico Martin / Say Hello GmbH (nico@sayhello.chL)
-Version: 0.0.2
+Version: 0.0.3
 Author URI: https://sayhello.ch
 Text Domain: hit
 Domain Path: /languages

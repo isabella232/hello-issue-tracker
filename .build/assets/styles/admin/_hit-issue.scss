@@ -1,0 +1,131 @@
+.hello-issue-tracker {
+	.hit-issue-list {
+		display: flex;
+		width: 100%;
+		border-bottom: 1px solid #e5e5e5;
+		cursor: pointer;
+		transition: all 400ms;
+		position: relative;
+
+		&__item {
+			padding: $padding $padding/2;
+			box-sizing: content-box;
+			&:nth-child(1), &:nth-child(3), &:nth-child(4) {
+				width: 12%;
+			}
+			&:nth-child(2) {
+				width: 64%;
+			}
+		}
+
+		&:before {
+			content: attr(data-state);
+			overflow: hidden;
+			writing-mode: vertical-lr;
+			line-height: 15px;
+			color: #fff;
+			text-align: center;
+			font-size: .6rem;
+			width: 4px;
+			transition: all 200ms;
+			bottom: 0;
+			left: 0;
+			top: 0;
+			position: absolute;
+			background-color: transparent;
+		}
+
+		&--opened:before {
+			background-color: c(orange);
+			color: c(orange);
+		}
+
+		&--closed:before {
+			background-color: c(green);
+			color: c(green);
+		}
+
+		&__title, &__id {
+			margin: 0;
+			font-size: 1.2rem;
+			line-height: 1;
+			font-weight: 600;
+		}
+
+		&__id {
+			text-align: center;
+		}
+
+		&__created {
+			margin-top: $padding/2;
+			display: block;
+			color: rgba(#000, .5);
+			font-size: .8rem;
+			b {
+				font-weight: 700;
+			}
+		}
+
+		&__labels {
+			margin-top: $padding/2;
+			display: inline-block;
+			&:empty {
+				display: none;
+			}
+		}
+
+		&__id {
+			color: rgba(#000, .1);
+			font-weight: 900;
+			font-size: 2.2rem;
+			transition: all 200ms;
+			vertical-align: middle !important;
+		}
+
+		&:hover {
+			background-color: rgba(c(grey, light), .7);
+			.hit-issue-list__id {
+				color: rgba(#000, .2);
+			}
+			&:before {
+				width: 12px;
+				color: #fff;
+			}
+		}
+	}
+
+	.hit-issue-label {
+		display: inline-block;
+		background-color: c(blue);
+		color: #fff;
+		line-height: 1;
+		padding: .6em 1em;
+		border-radius: 3px;
+		font-size: .7rem;
+		&:empty {
+			display: none;
+		}
+
+		&--small {
+			font-size: .6rem;
+		}
+
+		&--type {
+			&-bug {
+				background-color: c(orange);
+			}
+			&-bug {
+				background-color: c(red);
+			}
+		}
+
+		&--prio {
+			&-high {
+				background-color: c(red);
+			}
+			&-normal {
+				background-color: c(orange);
+			}
+		}
+	}
+}

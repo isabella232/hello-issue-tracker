@@ -1,12 +1,9 @@
 .hello-issue-tracker {
 	.hit-issues {
-		margin-top: 20px;
 		background-color: #fff;
-		width: 100%;
-		max-width: 600px;
 		border: 1px solid #e5e5e5;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
-		position: relative;
+		min-height: 400px;
 
 		&__options {
 			border-bottom: 1px solid #e5e5e5;
@@ -30,9 +27,14 @@
 			}
 		}
 
-		&__list {
-			min-height: 400px;
-			position: relative;
+		&__head {
+			width: 100%;
+			border-spacing: 0;
+			border-bottom: 1px solid #e5e5e5;
+			background-color: c(grey, light);
+			.hit-issue-list__item:first-child {
+				text-align: center;
+			}
 		}
 
 		&__loader {
@@ -52,5 +54,11 @@
 				@include spinner(5px solid #000);
 			}
 		}
+
+		&__list {
+			max-height: calc(100vh - 300px);
+			overflow: auto;
+		}
 	}
+
 }

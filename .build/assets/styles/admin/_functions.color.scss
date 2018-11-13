@@ -1,0 +1,15 @@
+@function color($color: black, $tone: 'base') {
+	@if map-has-key($colors, $color) {
+		@if map-has-key(map-get($colors, $color), $tone) {
+			@return map-get(map-get($colors, $color), $tone);
+		}
+		@error "Unknown tone `#{$tone}` of #{$color}.";
+		@return null;
+	}
+	@error "Unknown `#{$color}` in $colors.";
+	@return null;
+}
+
+@function c($color: black, $tone: 'base') {
+	@return color($color, $tone);
+}
