@@ -46,8 +46,31 @@ class Assets {
 		$min     = ! is_user_logged_in();
 		$dir_uri = plugin_dir_url( Plugin::file() );
 
-		wp_enqueue_style( "{$plugin_prefix}-admin-style", $dir_uri . 'assets/styles/admin' . ( $min ? '.min' : '' ) . '.css', [], $script_version );
-		wp_enqueue_script( "{$plugin_prefix}-admin-script", $dir_uri . 'assets/scripts/admin' . ( $min ? '.min' : '' ) . '.js', [ 'jquery' ], $script_version, true );
+		/**
+		 * CSS
+		 */
+		$deps = [];
+		wp_enqueue_style( 'tinyMCE', includes_url() . 'css/editor.min.css', $deps, '4.9.8' );
+		$deps[] = 'tinyMCE';
+		wp_enqueue_style( "{$plugin_prefix}-admin-style", $dir_uri . 'assets/styles/admin' . ( $min ? '.min' : '' ) . '.css', $deps, $script_version );
+		$deps[] = 'tinyMCE-lightgray';
+		wp_enqueue_style( "{$plugin_prefix}-admin-style", $dir_uri . 'assets/styles/admin' . ( $min ? '.min' : '' ) . '.css', $deps, $script_version );
+
+		/**
+		 * JS
+		 */
+		$deps = [ 'jquery' ];
+		wp_enqueue_script( 'tinyMCE', includes_url() . 'js/tinymce/tinymce.min.js', $deps, '4.8.0', true );
+		$deps[] = 'tinyMCE';
+		wp_enqueue_script( 'tinyMCE-theme', includes_url() . 'js/tinymce/themes/modern/theme.min.js', $deps, '4.8.0', true );
+		$deps[] = 'tinyMCE-theme';
+
+		foreach ( [ 'autoresize' ] as $plugin ) {
+			wp_enqueue_script( "tinyMCE-plugin-{$plugin}", $dir_uri . "assets/scripts/tinymce/{$plugin}/plugin.min.js", $deps );
+			$deps[] = "tinyMCE-plugin-{$plugin}";
+		}
+
+		wp_enqueue_script( "{$plugin_prefix}-admin-script", $dir_uri . 'assets/scripts/admin' . ( $min ? '.min' : '' ) . '.js', $deps, $script_version, true );
 
 		/**
 		 * Admin JS Vars

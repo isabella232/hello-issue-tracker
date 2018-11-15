@@ -33,32 +33,35 @@ class MenuPage {
 		<div class="hit-page">
 			<a class="hit-page__reset" href="admin.php?action=hit_remove_settings&site=<?php echo get_current_blog_id(); ?>"><?php _e( 'Reset credentials', 'hit' ); ?></a>
 			<div class="hit-page__side hit-issues">
-				<form class="hit-issues__options">
-					<?php
-					$options = [
-						'state' => [
-							'title'   => __( 'Status', 'hit' ),
-							'choices' => [ 'opened', 'closed' ]
-						],
-					];
+				<div class="hit-issues__header">
+					<form class="hit-issues__options">
+						<?php
+						$options = [
+							'state' => [
+								'title'   => __( 'Status', 'hit' ),
+								'choices' => [ 'opened', 'closed' ]
+							],
+						];
 
-					foreach ( $options as $option_key => $option ) {
-						echo "<div class='hit-issues__option'>";
-						echo "<label for='hit-issues-option-{$option_key}'>{$option['title']}</label>";
-						echo "<select name='{$option_key}' id='hit-issues-option-{$option_key}'>";
-						foreach ( $option['choices'] as $choice_key ) {
-							$translations = Assets::get_translations();
-							$label        = $choice_key;
-							if ( array_key_exists( $choice_key, $translations ) ) {
-								$label = $translations[ $choice_key ];
+						foreach ( $options as $option_key => $option ) {
+							echo "<div class='hit-issues__option'>";
+							echo "<label for='hit-issues-option-{$option_key}'>{$option['title']}</label>";
+							echo "<select name='{$option_key}' id='hit-issues-option-{$option_key}'>";
+							foreach ( $option['choices'] as $choice_key ) {
+								$translations = Assets::get_translations();
+								$label        = $choice_key;
+								if ( array_key_exists( $choice_key, $translations ) ) {
+									$label = $translations[ $choice_key ];
+								}
+								echo "<option value='{$choice_key}'>{$label}</option>";
 							}
-							echo "<option value='{$choice_key}'>{$label}</option>";
+							echo '</select>';
+							echo '</div>';
 						}
-						echo '</select>';
-						echo '</div>';
-					}
-					?>
-				</form>
+						?>
+					</form>
+					<button class="hit-issues__add-issue button button-primary js-hit-create-issue"><?php _e( 'Create Issue', 'hit' ); ?></button>
+				</div>
 				<div class="hit-issues__head hit-issue-list">
 					<div class="hit-issue-list__item"><?php _e( 'ID', 'hit' ); ?></div>
 					<div class="hit-issue-list__item"><?php _e( 'Title', 'hit' ); ?></div>
@@ -177,5 +180,12 @@ class MenuPage {
 		$sendback = wp_get_referer();
 		wp_redirect( esc_url_raw( $sendback ) );
 		exit;
+	}
+
+	public static function edit_window() {
+		echo '<div class="js-hit-edit-window hit-window" style="display: none;">';
+		echo '<div class="hit-window__background js-hit-edit-close"></div>';
+		echo '<div class="hit-window__inner"><button class="hit-window__close js-hit-edit-close"></button><div class="hit-window__content js-hit-edit-content"></div></div>';
+		echo '</div>';
 	}
 }

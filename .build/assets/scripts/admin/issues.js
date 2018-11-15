@@ -2,6 +2,7 @@ import {plugin} from './modules/settings.js';
 import {get, get_issues, parse_issue} from './modules/api';
 import {templateIssueList} from './template/issue-list';
 import {templateIssueMain} from './template/issue-main';
+import {templateIssueForm} from './template/issue-edit';
 
 (function ($) {
 	$(function () {
@@ -11,8 +12,34 @@ import {templateIssueMain} from './template/issue-main';
 		const $options = $container.find('.hit-issues__option select');
 		const $list = $container.find('.hit-issues__list');
 		const $main = $page.find('.hit-page__main');
+		const $editWindow = $('.js-hit-edit-window');
 		let options = {};
 		let store = {};
+
+		$('body').on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
+
+			let issue = false;
+			const iid = $(this).attr('data-iid');
+			if (typeof iid !== 'undefined') {
+				issue = store[iid];
+			}
+
+			$editWindow.find('.js-hit-edit-content').html(templateIssueForm(issue));
+			window.tinymce.init({
+				selector: "#hit-edit-description",
+				toolbar: 'formatselect | bold italic link image | bullist numlist',
+				menubar: false,
+				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
+				plugins: 'lists autoresize link',
+				autoresize_bottom_margin: 5,
+				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
+			});
+			$editWindow.fadeIn(200);
+		});
+
+		$('.js-hit-edit-close').on('click', function () {
+			$editWindow.fadeOut(200);
+		});
 
 		$options.on('change', () => {
 			set_options();

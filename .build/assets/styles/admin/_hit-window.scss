@@ -1,0 +1,60 @@
+.hit-window {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+	z-index: 19999;
+	&__content {
+		padding-top: $padding;
+	}
+
+	&__close {
+		background-color: transparent;
+		border: none;
+		outline: none;
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		height: 15px;
+		width: 15px;
+		padding: 0;
+		cursor: pointer;
+		&:after, &:before {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			top: 0;
+			left: 50%;
+			width: 1px;
+			margin-left: -.5px;
+			background-color: #000;
+			transform: rotate(45deg);
+		}
+		&:before {
+			transform: rotate(-45deg);
+		}
+	}
+
+	&__background {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		top: 0;
+		background-color: rgba(#000, .7);
+		cursor: pointer;
+	}
+
+	&__inner {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translateY(-50%) translateX(-50%);
+		min-height: 300px;
+		width: 500px;
+		max-width: 90%;
+		background-color: #fff;
+		box-shadow: 0 0 20px rgba(#000, .8);
+	}
+}
