@@ -31,6 +31,10 @@ export const templateIssueMain = function (issue) {
 			<div class="hit-issue__subtitle">			
 				<span class="hit-issue__labels">${issue.labels.map(label => `<span class="hit-issue-label hit-issue-label--small">${label}</span>`).join(' ')}</span>
 			</div>			
-			<div class="hit-issue__description">${description}</div>		
+			<div class="hit-issue__description">${description}</div>
+			<div class="hit-issue__comments">
+				<ul class="hit-issue__comment-list"></ul>
+				<div class="hit-issue__comment-loader"></div>
+			</div>	
 		</div>`;
 };

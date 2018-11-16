@@ -359,11 +359,44 @@
   .hello-issue-tracker .hit-issue__status {
     margin-bottom: 1.6rem; }
     .hello-issue-tracker .hit-issue__status .hit-issue-label {
-      margin: 0 1.6rem 0 0.8rem; }
+      margin: 0 1.6rem 0 0.4rem; }
   .hello-issue-tracker .hit-issue__title {
     font-size: 30px;
     line-height: 1.2;
     margin: 0 0 0.8rem 0; }
+  .hello-issue-tracker .hit-issue__description {
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid #ccc; }
+    .hello-issue-tracker .hit-issue__description * + * {
+      margin-top: 1em !important; }
+  .hello-issue-tracker .hit-issue__comments {
+    min-height: 100px;
+    position: relative; }
+  .hello-issue-tracker .hit-issue__comment-loader {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+    background-color: rgba(241, 241, 241, 0.8); }
+    .hello-issue-tracker .hit-issue__comment-loader:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      content: '';
+      font-size: 40px;
+      margin: -20px 0 0 -20px;
+      background-color: transparent;
+      border: 3px solid #000;
+      border-radius: 50%;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: middle;
+      box-sizing: border-box;
+      animation: spinner 0.65s infinite linear; }
 
 .hello-issue-tracker .button--close {
   background-color: #1aaa55;

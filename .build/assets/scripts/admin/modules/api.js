@@ -58,6 +58,13 @@ export const update_issue = function (iid, data) {
 	return do_api(`projects/${plugin.repo}/issues/${iid}`, data, 'PUT');
 };
 
+export const load_comments = function (iid) {
+	if (!plugin.repo) {
+		return false;
+	}
+	return do_api(`projects/${plugin.repo}/issues/${iid}/notes`);
+};
+
 export const parse_issue = function (obj) {
 	obj['hit_label'] = {};
 	for (const label of obj.labels) {

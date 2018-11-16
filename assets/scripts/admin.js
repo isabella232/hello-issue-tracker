@@ -9761,7 +9761,7 @@ if (true) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.parse_issue = exports.update_issue = exports.create_issue = exports.get_issue = exports.get_issues = exports.do_api = undefined;
+exports.parse_issue = exports.load_comments = exports.update_issue = exports.create_issue = exports.get_issue = exports.get_issues = exports.do_api = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -9853,6 +9853,13 @@ var update_issue = exports.update_issue = function update_issue(iid, data) {
 		return false;
 	}
 	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid, data, 'PUT');
+};
+
+var load_comments = exports.load_comments = function load_comments(iid) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid + '/notes');
 };
 
 var parse_issue = exports.parse_issue = function parse_issue(obj) {
@@ -21826,7 +21833,7 @@ var templateIssueMain = exports.templateIssueMain = function templateIssueMain(i
 
 	return "<div class=\"hit-issue\">\n\t\t\t<header class=\"hit-issue__header\">\n\t\t\t\t<span class=\"hit-issue__created\"><b>" + author + "</b> / " + date + "</span>\n\t\t\t\t" + (issue.state === 'opened' ? "<button class=\"button button--close js-hit-close-issue\" data-iid=\"" + issue.iid + "\">Close Issue</button><button class=\"button button-primary js-hit-edit-issue\" data-iid=\"" + issue.iid + "\">Edit Issue</button>" : "<span class=\"hit-issue-label hit-issue-label--big hit-issue-label--color-green\">" + state + "</span>") + "\n\t\t\t</header>\n\t\t\t<div class=\"hit-issue__status\">\n\t\t\t\tType: <span class=\"hit-issue-label hit-issue-label--type-" + issue.hit_label.type + "\">" + type + "</span>\n\t\t\t\tPriority: <span class=\"hit-issue-label hit-issue-label--prio-" + issue.hit_label.priority + "\">" + priority + "</span>\n\t\t\t</div>\n\t\t\t<h2 class=\"hit-issue__title\">" + issue.title + "</h2>\n\t\t\t<div class=\"hit-issue__subtitle\">\t\t\t\n\t\t\t\t<span class=\"hit-issue__labels\">" + issue.labels.map(function (label) {
 		return "<span class=\"hit-issue-label hit-issue-label--small\">" + label + "</span>";
-	}).join(' ') + "</span>\n\t\t\t</div>\t\t\t\n\t\t\t<div class=\"hit-issue__description\">" + description + "</div>\t\t\n\t\t</div>";
+	}).join(' ') + "</span>\n\t\t\t</div>\t\t\t\n\t\t\t<div class=\"hit-issue__description\">" + description + "</div>\n\t\t\t<div class=\"hit-issue__comments\">\n\t\t\t\t<ul class=\"hit-issue__comment-list\"></ul>\n\t\t\t\t<div class=\"hit-issue__comment-loader\"></div>\n\t\t\t</div>\t\n\t\t</div>";
 };
 
 /***/ }),
@@ -22086,7 +22093,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 									} else {
 										$listElement.replaceWith((0, _issueList.templateIssueList)(store[newIssue.iid]));
 									}
-									$main.html((0, _issueMain.templateIssueMain)(store[newIssue.iid]));
+									set_main(newIssue.iid);
 									$editWindow.fadeOut(200, function () {
 										tinymce.remove(descriptionEditorID);
 									});
@@ -22152,7 +22159,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 							$('#hit-issues-option-state').val('closed');
 							set_options();
 							load_issues().then(function () {
-								$main.html((0, _issueMain.templateIssueMain)(store[iid]));
+								set_main(iid);
 							});
 
 						case 14:
@@ -22163,7 +22170,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 			}, _callee2, this);
 		})));
 
-		$('.js-hit-edit-close').on('click', function () {
+		$page.on('click', '.js-hit-edit-close', function () {
 			if (changes) {
 				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
 					return;
@@ -22184,8 +22191,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 		$page.on('click', '.hit-issue-list', function () {
 			var iid = $(this).attr('data-iid');
-			$main.html((0, _issueMain.templateIssueMain)(store[iid]));
+			set_main(iid);
 		});
+
+		function set_main(iid) {
+			$main.html((0, _issueMain.templateIssueMain)(store[iid]));
+			(0, _api.load_comments)(iid).then(function (resp) {
+				console.log(resp);
+			});
+		}
 
 		function set_options() {
 			$options.each(function () {

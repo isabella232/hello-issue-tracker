@@ -1,5 +1,5 @@
 import {plugin} from './modules/settings.js';
-import {do_api, get_issues, parse_issue} from './modules/api';
+import {do_api, get_issues, parse_issue, load_comments} from './modules/api';
 import {templateIssueList} from './template/issue-list';
 import {templateIssueMain} from './template/issue-main';
 import {templateIssueForm, submitForm} from './template/issue-edit';
@@ -62,7 +62,7 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 				} else {
 					$listElement.replaceWith(templateIssueList(store[newIssue.iid]));
 				}
-				$main.html(templateIssueMain(store[newIssue.iid]));
+				set_main(newIssue.iid);
 				$editWindow.fadeOut(200, () => {
 					tinymce.remove(descriptionEditorID);
 				});
@@ -94,11 +94,11 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			$('#hit-issues-option-state').val('closed');
 			set_options();
 			load_issues().then(() => {
-				$main.html(templateIssueMain(store[iid]));
+				set_main(iid);
 			});
 		});
 
-		$('.js-hit-edit-close').on('click', function () {
+		$page.on('click', '.js-hit-edit-close', function () {
 			if (changes) {
 				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
 					return;
@@ -119,8 +119,15 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 
 		$page.on('click', '.hit-issue-list', function () {
 			const iid = $(this).attr('data-iid');
-			$main.html(templateIssueMain(store[iid]));
+			set_main(iid);
 		});
+
+		function set_main(iid) {
+			$main.html(templateIssueMain(store[iid]));
+			load_comments(iid).then(resp => {
+				console.log(resp)
+			});
+		}
 
 		async function load_issues() {
 			$loader.fadeIn(200);
