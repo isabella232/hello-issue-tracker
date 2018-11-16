@@ -2,7 +2,7 @@ import {plugin} from './modules/settings.js';
 import {get, get_issues, parse_issue} from './modules/api';
 import {templateIssueList} from './template/issue-list';
 import {templateIssueMain} from './template/issue-main';
-import {templateIssueForm} from './template/issue-edit';
+import {templateIssueForm, submitForm} from './template/issue-edit';
 
 (function ($) {
 	$(function () {
@@ -15,30 +15,71 @@ import {templateIssueForm} from './template/issue-edit';
 		const $editWindow = $('.js-hit-edit-window');
 		let options = {};
 		let store = {};
+		const descriptionEditorID = '#hit-edit-description';
+		const tinymce = window.tinymce;
+		let changes = false;
 
-		$('body').on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
+		$page.on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
 
 			let issue = false;
+			changes = false;
 			const iid = $(this).attr('data-iid');
 			if (typeof iid !== 'undefined') {
 				issue = store[iid];
 			}
 
 			$editWindow.find('.js-hit-edit-content').html(templateIssueForm(issue));
-			window.tinymce.init({
-				selector: "#hit-edit-description",
+			tinymce.init({
+				selector: descriptionEditorID,
 				toolbar: 'formatselect | bold italic link image | bullist numlist',
 				menubar: false,
 				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
 				plugins: 'lists autoresize link',
 				autoresize_bottom_margin: 5,
-				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
+				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}",
 			});
+
+			$('.js-hit-edit-content .hit-edit__input').on('change', () => {
+				changes = true;
+			});
+
+			$('.js-hit-edit-content .js-hit-edit-form').on('submit', async function (e) {
+				e.preventDefault();
+				const $formLoading = $('.hit-edit__loader');
+				$formLoading.fadeIn(200);
+				const submitted = await submitForm($(this));
+				$formLoading.fadeOut(200);
+				if (!submitted.response) {
+					alert('An unexpected error occured');
+					return;
+				}
+				changes = false;
+				const newIssue = parse_issue(submitted);
+				store[newIssue.iid] = newIssue;
+				const $listElement = $list.find(`[data-iid="${newIssue.iid}"]`);
+				if (!$listElement.length) {
+					$list.prepend(templateIssueList(store[newIssue.iid]));
+				} else {
+					$listElement.replaceWith(templateIssueList(store[newIssue.iid]));
+				}
+				$main.html(templateIssueMain(store[newIssue.iid]));
+				$editWindow.fadeOut(200, () => {
+					tinymce.remove(descriptionEditorID);
+				});
+			});
+
 			$editWindow.fadeIn(200);
 		});
 
 		$('.js-hit-edit-close').on('click', function () {
-			$editWindow.fadeOut(200);
+			if (changes) {
+				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
+					return;
+				}
+			}
+			$editWindow.fadeOut(200, () => {
+				tinymce.remove(descriptionEditorID);
+			});
 		});
 
 		$options.on('change', () => {
@@ -49,19 +90,25 @@ import {templateIssueForm} from './template/issue-edit';
 		set_options();
 		load_issues();
 
+		$page.on('click', '.hit-issue-list', function () {
+			const iid = $(this).attr('data-iid');
+			$main.html(templateIssueMain(store[iid]));
+		});
+
 		async function load_issues() {
 			$loader.fadeIn(200);
 			const issues = await get_issues(options);
+			if (!issues.response) {
+				alert('An unexpected error occured');
+				return;
+			}
+
 			store = {};
 			$list.html('');
 			for (const value of issues) {
 				store[value.iid] = parse_issue(value);
 				$list.append(templateIssueList(store[value.iid]));
 			}
-			$('.hit-issue-list').on('click', function () {
-				const iid = $(this).attr('data-iid');
-				$main.html(templateIssueMain(store[iid]));
-			});
 			$loader.fadeOut(200);
 		}
 

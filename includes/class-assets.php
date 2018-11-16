@@ -88,19 +88,31 @@ class Assets {
 	}
 
 	public static function add_vars( $vars ) {
-		$vars['APIbase']      = Plugin::get_option( 'baseurl' );
-		$vars['repo']         = Plugin::get_option( 'repo_id' );
-		$vars['key']          = Plugin::get_option( 'key' );
-		$vars['labelPrefix']  = apply_filters( 'hit_label_prefix', 'wp_' );
-		$vars['translations'] = self::get_translations();
+		$vars['APIbase']     = Plugin::get_option( 'baseurl' );
+		$vars['repo']        = Plugin::get_option( 'repo_id' );
+		$vars['key']         = Plugin::get_option( 'key' );
+		$vars['labelPrefix'] = apply_filters( 'hit_label_prefix', 'wp_' );
+		$vars['user']        = wp_get_current_user()->user_email;
+		$vars['issue']       = self::issue_vars();
 
 		return $vars;
 	}
 
-	public static function get_translations() {
+	public static function issue_vars() {
 		return [
-			'opened' => __( 'Open', 'hit' ),
-			'closed' => __( 'Closed', 'hit' ),
+			'states'     => apply_filters( 'hit_status', [
+				'opened' => __( 'Open', 'hit' ),
+				'closed' => __( 'Closed', 'hit' ),
+			] ),
+			'priorities' => apply_filters( 'hit_priorities', [
+				'low'    => __( 'Hat Zeit', 'hit' ),
+				'normal' => __( 'Normal', 'hit' ),
+				'high'   => __( 'Gestern!', 'hit' ),
+			] ),
+			'types'      => apply_filters( 'hit_types', [
+				'bug'     => __( 'Bug', 'hit' ),
+				'feature' => __( 'Feature', 'hit' ),
+			] ),
 		];
 	}
 }

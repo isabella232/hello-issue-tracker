@@ -184,27 +184,31 @@
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
     min-height: 300px;
-    width: 500px;
+    width: 700px;
     max-width: 90%;
     background-color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); }
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.4); }
 
 .hit-edit {
-  padding: 1.6rem; }
+  padding: 1.6rem;
+  position: relative; }
   .hit-edit__label {
     font-weight: 700;
-    padding-right: 0.8rem; }
+    padding-right: 0.8rem;
+    width: 70px; }
   .hit-edit__input {
     padding: 0.4rem;
     line-height: 1;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
-    width: 90%; }
+    width: calc(100% - 70px); }
   .hit-edit__element {
     display: flex;
     align-items: center; }
     .hit-edit__element + .hit-edit__element {
       margin-top: 1.6rem; }
+    .hit-edit__element--controls {
+      flex-direction: row-reverse; }
   .hit-edit .mce-tinymce {
     box-shadow: none;
     border-bottom: 1px solid #ccc; }
@@ -212,6 +216,31 @@
       border: 1px solid #ccc; }
     .hit-edit .mce-tinymce .mce-statusbar {
       display: none; }
+  .hit-edit__loader {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.8); }
+    .hit-edit__loader:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      content: '';
+      font-size: 60px;
+      margin: -30px 0 0 -30px;
+      background-color: transparent;
+      border: 5px solid #000;
+      border-radius: 50%;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: middle;
+      box-sizing: border-box;
+      animation: spinner 0.65s infinite linear; }
 
 .hello-issue-tracker .hit-issue-list {
   display: flex;

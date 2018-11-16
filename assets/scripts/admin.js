@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 128);
+/******/ 	return __webpack_require__(__webpack_require__.s = 130);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1902,7 +1902,7 @@
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(133)("./" + name);
+                __webpack_require__(134)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -4574,7 +4574,7 @@
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(132)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(133)(module)))
 
 /***/ }),
 /* 1 */
@@ -4588,7 +4588,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.plugin = undefined;
 
-var _settings = __webpack_require__(130);
+var _settings = __webpack_require__(132);
 
 var settings = _interopRequireWildcard(_settings);
 
@@ -4611,6 +4611,160 @@ var plugin = exports.plugin = pluginObject;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.parse_issue = exports.update_issue = exports.create_issue = exports.get_issue = exports.get_issues = undefined;
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _settings = __webpack_require__(1);
+
+var apiBase = _settings.plugin.APIbase + 'api/v4/';
+
+function do_api(path) {
+	var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
+
+	if (!_settings.plugin.key) {
+		return false;
+	}
+	return new Promise(function (resolve) {
+		var urlParams = [];
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = Object.entries(data)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var _ref = _step.value;
+
+				var _ref2 = _slicedToArray(_ref, 2);
+
+				var key = _ref2[0];
+				var value = _ref2[1];
+
+				urlParams.push(key + '=' + encodeURI(value));
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+
+		var url = apiBase + path + '?' + urlParams.join('&');
+
+		jQuery.ajax({
+			type: type,
+			beforeSend: function beforeSend(request) {
+				request.setRequestHeader("PRIVATE-TOKEN", _settings.plugin.key);
+			},
+			url: url,
+			success: function success(data) {
+				data.response = true;
+				resolve(data);
+			},
+			error: function error() {
+				resolve({ response: false });
+			}
+		});
+	});
+}
+
+var get_issues = exports.get_issues = function get_issues(options) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues', options);
+};
+
+var get_issue = exports.get_issue = function get_issue(iid) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid, options);
+};
+
+var create_issue = exports.create_issue = function create_issue(data) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues', data, 'POST');
+};
+
+var update_issue = exports.update_issue = function update_issue(iid, data) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid, data, 'PUT');
+};
+
+var parse_issue = exports.parse_issue = function parse_issue(obj) {
+	obj['hit_label'] = {};
+
+	var _loop = function _loop(label) {
+		var regex = new RegExp(_settings.plugin.labelPrefix + '([a-z0-9]*): ');
+		var match = regex.exec(label);
+		var index = 0;
+		if (match != null) {
+			obj['hit_label'][match[1]] = label.replace(match[0], '');
+			obj['labels'] = obj['labels'].filter(function (e) {
+				return e !== label;
+			});
+		}
+	};
+
+	var _iteratorNormalCompletion2 = true;
+	var _didIteratorError2 = false;
+	var _iteratorError2 = undefined;
+
+	try {
+		for (var _iterator2 = obj.labels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+			var label = _step2.value;
+
+			_loop(label);
+		}
+	} catch (err) {
+		_didIteratorError2 = true;
+		_iteratorError2 = err;
+	} finally {
+		try {
+			if (!_iteratorNormalCompletion2 && _iterator2.return) {
+				_iterator2.return();
+			}
+		} finally {
+			if (_didIteratorError2) {
+				throw _iteratorError2;
+			}
+		}
+	}
+
+	var _arr = ['author', 'type', 'priority'];
+	for (var _i = 0; _i < _arr.length; _i++) {
+		var key = _arr[_i];
+		if (!(key in obj['hit_label'])) {
+			obj['hit_label'][key] = '';
+		}
+	}
+	return obj;
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.templateIssueList = undefined;
 
 var _settings = __webpack_require__(1);
@@ -4622,21 +4776,24 @@ var _moment2 = _interopRequireDefault(_moment);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var templateIssueList = exports.templateIssueList = function templateIssueList(issue) {
-	console.log(issue);
+
 	var author = issue.author.name;
 	if (issue.hit_label.author) {
 		author = issue.hit_label.author;
 	}
 
 	var date = (0, _moment2.default)(issue.created_at).format('MMMM Do YYYY, h:mm a');
+	var state = issue.state in _settings.plugin.issue.states ? _settings.plugin.issue.states[issue.state] : issue.state;
+	var type = issue.hit_label.type in _settings.plugin.issue.types ? _settings.plugin.issue.types[issue.hit_label.type] : issue.hit_label.type;
+	var priority = issue.hit_label.priority in _settings.plugin.issue.priorities ? _settings.plugin.issue.priorities[issue.hit_label.priority] : issue.hit_label.priority;
 
-	return '<div data-iid="' + issue.iid + '" class="hit-issue-list hit-issue-list--' + issue.state + '" data-state="' + _settings.plugin.translations[issue.state] + '">\n\t\t\t<div class="hit-issue-list__item hit-issue-list__id">#' + issue.iid + '</div>\n\t\t\t<div class="hit-issue-list__item">\n\t\t\t\t<h3 class="hit-issue-list__title">' + issue.title + '</h3>\n\t\t\t\t<span class="hit-issue-list__created"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t<span class="hit-issue-list__labels">' + issue.labels.map(function (label) {
+	return '<div data-iid="' + issue.iid + '" class="hit-issue-list hit-issue-list--' + issue.state + '" data-state="' + state + '">\n\t\t\t<div class="hit-issue-list__item hit-issue-list__id">#' + issue.iid + '</div>\n\t\t\t<div class="hit-issue-list__item">\n\t\t\t\t<h3 class="hit-issue-list__title">' + issue.title + '</h3>\n\t\t\t\t<span class="hit-issue-list__created"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t<span class="hit-issue-list__labels">' + issue.labels.map(function (label) {
 		return '<span class="hit-issue-label hit-issue-label--small">' + label + '</span>';
-	}).join(' ') + '</span>\n\t\t\t</div>\t \n\t\t\t<div class="hit-issue-list__item"><span class="hit-issue-label hit-issue-label--type-' + issue.hit_label.type + '">' + issue.hit_label.type + '</span></div>\t \n\t\t\t<div class="hit-issue-list__item"><span class="hit-issue-label hit-issue-label--prio-' + issue.hit_label.priority + '">' + issue.hit_label.priority + '</span></div>\t \n\t\t</div>';
+	}).join(' ') + '</span>\n\t\t\t</div>\t \n\t\t\t<div class="hit-issue-list__item"><span class="hit-issue-label hit-issue-label--type-' + issue.hit_label.type + '">' + type + '</span></div>\t \n\t\t\t<div class="hit-issue-list__item"><span class="hit-issue-label hit-issue-label--prio-' + issue.hit_label.priority + '">' + priority + '</span></div>\t \n\t\t</div>';
 };
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -4713,7 +4870,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -4852,7 +5009,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -4915,7 +5072,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -4978,7 +5135,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5104,7 +5261,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5167,7 +5324,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5275,7 +5432,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5338,7 +5495,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5447,7 +5604,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5583,7 +5740,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5677,7 +5834,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5739,7 +5896,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5862,7 +6019,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -5985,7 +6142,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6097,7 +6254,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6252,7 +6409,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6344,7 +6501,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6527,7 +6684,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6594,7 +6751,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6678,7 +6835,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6742,7 +6899,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6822,7 +6979,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6902,7 +7059,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6982,7 +7139,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7085,7 +7242,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7189,7 +7346,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7260,7 +7417,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7327,7 +7484,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7398,7 +7555,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7469,7 +7626,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7535,7 +7692,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7606,7 +7763,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7681,7 +7838,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7777,7 +7934,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7873,7 +8030,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7960,7 +8117,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8044,7 +8201,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8114,7 +8271,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8224,7 +8381,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8337,7 +8494,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8401,7 +8558,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8488,7 +8645,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8566,7 +8723,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8648,7 +8805,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8727,7 +8884,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8807,7 +8964,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8888,7 +9045,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9015,7 +9172,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9143,7 +9300,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9244,7 +9401,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9372,7 +9529,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9530,7 +9687,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9644,7 +9801,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9743,7 +9900,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9829,7 +9986,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9965,7 +10122,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10038,7 +10195,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10134,7 +10291,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10220,7 +10377,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10313,7 +10470,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10404,7 +10561,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10518,7 +10675,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10648,7 +10805,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10733,7 +10890,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10824,7 +10981,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10964,7 +11121,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11038,7 +11195,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11160,7 +11317,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11261,7 +11418,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11377,7 +11534,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11445,7 +11602,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11539,7 +11696,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11624,7 +11781,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11732,7 +11889,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11896,7 +12053,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11982,7 +12139,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12068,7 +12225,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12132,7 +12289,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12229,7 +12386,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12295,7 +12452,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12422,7 +12579,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12513,7 +12670,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12604,7 +12761,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12668,7 +12825,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12796,7 +12953,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12926,7 +13083,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12995,7 +13152,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13060,7 +13217,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13139,7 +13296,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13325,7 +13482,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13427,7 +13584,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13491,7 +13648,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13566,7 +13723,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13726,7 +13883,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13903,7 +14060,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13975,7 +14132,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14090,7 +14247,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14205,7 +14362,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14297,7 +14454,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14370,7 +14527,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14433,7 +14590,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14566,7 +14723,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14659,7 +14816,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14730,7 +14887,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14850,7 +15007,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14921,7 +15078,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14987,7 +15144,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15113,7 +15270,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -15211,7 +15368,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15306,7 +15463,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15368,7 +15525,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15430,7 +15587,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js language configuration
@@ -15553,7 +15710,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15708,7 +15865,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15810,7 +15967,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15872,7 +16029,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15934,7 +16091,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16017,7 +16174,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16089,7 +16246,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16153,7 +16310,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16267,7 +16424,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16374,7 +16531,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16481,7 +16638,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16504,7 +16661,7 @@ var templateIssueMain = exports.templateIssueMain = function templateIssueMain(i
 };
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16513,611 +16670,60 @@ var templateIssueMain = exports.templateIssueMain = function templateIssueMain(i
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.submitForm = exports.templateIssueForm = undefined;
+
+var _settings = __webpack_require__(1);
+
+__webpack_require__(135);
+
+var _api = __webpack_require__(2);
+
 var templateIssueForm = exports.templateIssueForm = function templateIssueForm() {
 	var issue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 
-	var showdown = __webpack_require__(134);
+	var showdown = __webpack_require__(129);
 	var description = issue.description || '';
 	var converter = new showdown.Converter();
 	description = converter.makeHtml(description);
-	console.log(description);
 
-	return '<form class="hit-edit">\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-title" class="hit-edit__label">Title</label>\n\t\t\t\t<input id="hit-edit-title" class="hit-edit__input" name="title" value="' + (issue.title || 'New issue') + '" type="text">\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<textarea id="hit-edit-description" class="hit-edit__textarea" name="description">' + description + '</textarea>\n\t\t\t</div>\n\t\t</form>';
+	return '<form class="hit-edit js-hit-edit-form">\n\t\t\t<input type="hidden" name="iid" value="' + (issue.iid || 'new') + '" />\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-title" class="hit-edit__label">Title</label>\n\t\t\t\t<input id="hit-edit-title" class="hit-edit__input" name="title" value="' + (issue.title || 'New issue') + '" type="text">\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<textarea id="hit-edit-description" class="hit-edit__textarea" name="description">' + description + '</textarea>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-priority" class="hit-edit__label">Priority</label>\n\t\t\t\t<select id="hit-edit-priority" class="hit-edit__input" name="priority">\n\t\t\t\t\t' + Object.keys(_settings.plugin.issue.priorities).map(function (key) {
+		return '<option ' + (issue && issue.hit_label.priority === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.priorities[key] + '</option>';
+	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-type" class="hit-edit__label">Type</label>\n\t\t\t\t<select id="hit-edit-type" class="hit-edit__input" name="type">\n\t\t\t\t\t' + Object.keys(_settings.plugin.issue.types).map(function (key) {
+		return '<option ' + (issue && issue.hit_label.type === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.types[key] + '</option>';
+	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element hit-edit__element--controls">\n\t\t\t\t<button type="submit" class="button button-primary">' + (issue ? 'Update' : 'Create') + '</button>\n\t\t\t</div>\n\t\t\t<span class="hit-edit__loader" style="display: none;"></span>\n\t\t</form>';
 };
 
-/***/ }),
-/* 128 */
-/***/ (function(module, exports, __webpack_require__) {
+var submitForm = exports.submitForm = function submitForm($form) {
 
-__webpack_require__(129);
-__webpack_require__(135);
-__webpack_require__(136);
-__webpack_require__(127);
-__webpack_require__(2);
-module.exports = __webpack_require__(126);
+	var input = $form.serializeObject();
+	console.log(input);
+	var data = {};
 
+	data.title = input.title;
+
+	var showdown = __webpack_require__(129);
+	var converter = new showdown.Converter();
+	data.description = converter.makeMarkdown(input.description);
+
+	var labels = [_settings.plugin.labelPrefix + 'type: ' + input.type, _settings.plugin.labelPrefix + 'priority: ' + input.priority];
+	if (input.iid === 'new') {
+		labels.push(_settings.plugin.labelPrefix + 'author: ' + _settings.plugin.user);
+	}
+	data.labels = labels.join();
+
+	return new Promise(function (resolve) {
+		console.log(data);
+		if (input.iid === 'new') {
+			resolve((0, _api.create_issue)(data));
+		} else {
+			resolve((0, _api.update_issue)(input.iid, data));
+		}
+	});
+};
 
 /***/ }),
 /* 129 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _settings = __webpack_require__(1);
-
-var _api = __webpack_require__(131);
-
-var _issueList = __webpack_require__(2);
-
-var _issueMain = __webpack_require__(126);
-
-var _issueEdit = __webpack_require__(127);
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-(function ($) {
-	$(function () {
-		var load_issues = function () {
-			var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-				var issues, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, value;
-
-				return regeneratorRuntime.wrap(function _callee$(_context) {
-					while (1) {
-						switch (_context.prev = _context.next) {
-							case 0:
-								$loader.fadeIn(200);
-								_context.next = 3;
-								return (0, _api.get_issues)(options);
-
-							case 3:
-								issues = _context.sent;
-
-								store = {};
-								$list.html('');
-								_iteratorNormalCompletion = true;
-								_didIteratorError = false;
-								_iteratorError = undefined;
-								_context.prev = 9;
-								for (_iterator = issues[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-									value = _step.value;
-
-									store[value.iid] = (0, _api.parse_issue)(value);
-									$list.append((0, _issueList.templateIssueList)(store[value.iid]));
-								}
-								_context.next = 17;
-								break;
-
-							case 13:
-								_context.prev = 13;
-								_context.t0 = _context['catch'](9);
-								_didIteratorError = true;
-								_iteratorError = _context.t0;
-
-							case 17:
-								_context.prev = 17;
-								_context.prev = 18;
-
-								if (!_iteratorNormalCompletion && _iterator.return) {
-									_iterator.return();
-								}
-
-							case 20:
-								_context.prev = 20;
-
-								if (!_didIteratorError) {
-									_context.next = 23;
-									break;
-								}
-
-								throw _iteratorError;
-
-							case 23:
-								return _context.finish(20);
-
-							case 24:
-								return _context.finish(17);
-
-							case 25:
-								$('.hit-issue-list').on('click', function () {
-									var iid = $(this).attr('data-iid');
-									$main.html((0, _issueMain.templateIssueMain)(store[iid]));
-								});
-								$loader.fadeOut(200);
-
-							case 27:
-							case 'end':
-								return _context.stop();
-						}
-					}
-				}, _callee, this, [[9, 13, 17, 25], [18,, 20, 24]]);
-			}));
-
-			return function load_issues() {
-				return _ref.apply(this, arguments);
-			};
-		}();
-
-		var $page = $('.hit-page');
-		var $container = $page.find('.hit-issues');
-		var $loader = $container.find('.hit-issues__loader');
-		var $options = $container.find('.hit-issues__option select');
-		var $list = $container.find('.hit-issues__list');
-		var $main = $page.find('.hit-page__main');
-		var $editWindow = $('.js-hit-edit-window');
-		var options = {};
-		var store = {};
-
-		$('body').on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
-
-			var issue = false;
-			var iid = $(this).attr('data-iid');
-			if (typeof iid !== 'undefined') {
-				issue = store[iid];
-			}
-
-			$editWindow.find('.js-hit-edit-content').html((0, _issueEdit.templateIssueForm)(issue));
-			window.tinymce.init({
-				selector: "#hit-edit-description",
-				toolbar: 'formatselect | bold italic link image | bullist numlist',
-				menubar: false,
-				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
-				plugins: 'lists autoresize link',
-				autoresize_bottom_margin: 5,
-				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
-			});
-			$editWindow.fadeIn(200);
-		});
-
-		$('.js-hit-edit-close').on('click', function () {
-			$editWindow.fadeOut(200);
-		});
-
-		$options.on('change', function () {
-			set_options();
-			load_issues();
-		});
-
-		set_options();
-		load_issues();
-
-		function set_options() {
-			$options.each(function () {
-				options[$(this).attr('name')] = $(this).val();
-			});
-		}
-	});
-})(jQuery);
-
-/***/ }),
-/* 130 */
-/***/ (function(module, exports) {
-
-module.exports = {"colors":{"black":{"base":"#000","dark":"#000","light":"#7C7C7B"},"grey":{"base":"#e5e5e5","light":"#f8f8f8"},"white":{"base":"#fff"},"blue":{"base":"#0073aa"},"red":{"base":"#e3000b"},"green":{"base":"#1aaa55"},"orange":{"base":"#ff9c2f"}}}
-
-/***/ }),
-/* 131 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.parse_issue = exports.get_issue = exports.get_issues = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _settings = __webpack_require__(1);
-
-var apiBase = _settings.plugin.APIbase + 'api/v4/';
-
-function get_api(path) {
-	var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-	if (!_settings.plugin.key) {
-		return false;
-	}
-	return new Promise(function (resolve) {
-
-		var urlParams = [];
-		urlParams.push('private_token=' + _settings.plugin.key);
-		var _iteratorNormalCompletion = true;
-		var _didIteratorError = false;
-		var _iteratorError = undefined;
-
-		try {
-			for (var _iterator = Object.entries(params)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var _ref = _step.value;
-
-				var _ref2 = _slicedToArray(_ref, 2);
-
-				var key = _ref2[0];
-				var value = _ref2[1];
-
-				urlParams.push(key + '=' + value);
-			}
-		} catch (err) {
-			_didIteratorError = true;
-			_iteratorError = err;
-		} finally {
-			try {
-				if (!_iteratorNormalCompletion && _iterator.return) {
-					_iterator.return();
-				}
-			} finally {
-				if (_didIteratorError) {
-					throw _iteratorError;
-				}
-			}
-		}
-
-		var url = apiBase + path + '?' + urlParams.join('&');
-		jQuery.getJSON(url, function (json) {
-			resolve(json);
-		});
-	});
-}
-
-var get_issues = exports.get_issues = function get_issues(options) {
-	if (!_settings.plugin.repo) {
-		return false;
-	}
-	return get_api('projects/' + _settings.plugin.repo + '/issues', options);
-};
-
-var get_issue = exports.get_issue = function get_issue(issueID) {};
-
-var parse_issue = exports.parse_issue = function parse_issue(obj) {
-	obj['hit_label'] = {};
-
-	var _loop = function _loop(label) {
-		var regex = new RegExp(_settings.plugin.labelPrefix + '([a-z0-9]*): ');
-		var match = regex.exec(label);
-		var index = 0;
-		if (match != null) {
-			obj['hit_label'][match[1]] = label.replace(match[0], '');
-			obj['labels'] = obj['labels'].filter(function (e) {
-				return e !== label;
-			});
-		}
-	};
-
-	var _iteratorNormalCompletion2 = true;
-	var _didIteratorError2 = false;
-	var _iteratorError2 = undefined;
-
-	try {
-		for (var _iterator2 = obj.labels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-			var label = _step2.value;
-
-			_loop(label);
-		}
-	} catch (err) {
-		_didIteratorError2 = true;
-		_iteratorError2 = err;
-	} finally {
-		try {
-			if (!_iteratorNormalCompletion2 && _iterator2.return) {
-				_iterator2.return();
-			}
-		} finally {
-			if (_didIteratorError2) {
-				throw _iteratorError2;
-			}
-		}
-	}
-
-	var _arr = ['author', 'type', 'priority'];
-	for (var _i = 0; _i < _arr.length; _i++) {
-		var key = _arr[_i];
-		if (!(key in obj['hit_label'])) {
-			obj['hit_label'][key] = '';
-		}
-	}
-	return obj;
-};
-
-/***/ }),
-/* 132 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 133 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var map = {
-	"./af": 3,
-	"./af.js": 3,
-	"./ar": 4,
-	"./ar-dz": 5,
-	"./ar-dz.js": 5,
-	"./ar-kw": 6,
-	"./ar-kw.js": 6,
-	"./ar-ly": 7,
-	"./ar-ly.js": 7,
-	"./ar-ma": 8,
-	"./ar-ma.js": 8,
-	"./ar-sa": 9,
-	"./ar-sa.js": 9,
-	"./ar-tn": 10,
-	"./ar-tn.js": 10,
-	"./ar.js": 4,
-	"./az": 11,
-	"./az.js": 11,
-	"./be": 12,
-	"./be.js": 12,
-	"./bg": 13,
-	"./bg.js": 13,
-	"./bm": 14,
-	"./bm.js": 14,
-	"./bn": 15,
-	"./bn.js": 15,
-	"./bo": 16,
-	"./bo.js": 16,
-	"./br": 17,
-	"./br.js": 17,
-	"./bs": 18,
-	"./bs.js": 18,
-	"./ca": 19,
-	"./ca.js": 19,
-	"./cs": 20,
-	"./cs.js": 20,
-	"./cv": 21,
-	"./cv.js": 21,
-	"./cy": 22,
-	"./cy.js": 22,
-	"./da": 23,
-	"./da.js": 23,
-	"./de": 24,
-	"./de-at": 25,
-	"./de-at.js": 25,
-	"./de-ch": 26,
-	"./de-ch.js": 26,
-	"./de.js": 24,
-	"./dv": 27,
-	"./dv.js": 27,
-	"./el": 28,
-	"./el.js": 28,
-	"./en-au": 29,
-	"./en-au.js": 29,
-	"./en-ca": 30,
-	"./en-ca.js": 30,
-	"./en-gb": 31,
-	"./en-gb.js": 31,
-	"./en-ie": 32,
-	"./en-ie.js": 32,
-	"./en-il": 33,
-	"./en-il.js": 33,
-	"./en-nz": 34,
-	"./en-nz.js": 34,
-	"./eo": 35,
-	"./eo.js": 35,
-	"./es": 36,
-	"./es-do": 37,
-	"./es-do.js": 37,
-	"./es-us": 38,
-	"./es-us.js": 38,
-	"./es.js": 36,
-	"./et": 39,
-	"./et.js": 39,
-	"./eu": 40,
-	"./eu.js": 40,
-	"./fa": 41,
-	"./fa.js": 41,
-	"./fi": 42,
-	"./fi.js": 42,
-	"./fo": 43,
-	"./fo.js": 43,
-	"./fr": 44,
-	"./fr-ca": 45,
-	"./fr-ca.js": 45,
-	"./fr-ch": 46,
-	"./fr-ch.js": 46,
-	"./fr.js": 44,
-	"./fy": 47,
-	"./fy.js": 47,
-	"./gd": 48,
-	"./gd.js": 48,
-	"./gl": 49,
-	"./gl.js": 49,
-	"./gom-latn": 50,
-	"./gom-latn.js": 50,
-	"./gu": 51,
-	"./gu.js": 51,
-	"./he": 52,
-	"./he.js": 52,
-	"./hi": 53,
-	"./hi.js": 53,
-	"./hr": 54,
-	"./hr.js": 54,
-	"./hu": 55,
-	"./hu.js": 55,
-	"./hy-am": 56,
-	"./hy-am.js": 56,
-	"./id": 57,
-	"./id.js": 57,
-	"./is": 58,
-	"./is.js": 58,
-	"./it": 59,
-	"./it.js": 59,
-	"./ja": 60,
-	"./ja.js": 60,
-	"./jv": 61,
-	"./jv.js": 61,
-	"./ka": 62,
-	"./ka.js": 62,
-	"./kk": 63,
-	"./kk.js": 63,
-	"./km": 64,
-	"./km.js": 64,
-	"./kn": 65,
-	"./kn.js": 65,
-	"./ko": 66,
-	"./ko.js": 66,
-	"./ky": 67,
-	"./ky.js": 67,
-	"./lb": 68,
-	"./lb.js": 68,
-	"./lo": 69,
-	"./lo.js": 69,
-	"./lt": 70,
-	"./lt.js": 70,
-	"./lv": 71,
-	"./lv.js": 71,
-	"./me": 72,
-	"./me.js": 72,
-	"./mi": 73,
-	"./mi.js": 73,
-	"./mk": 74,
-	"./mk.js": 74,
-	"./ml": 75,
-	"./ml.js": 75,
-	"./mn": 76,
-	"./mn.js": 76,
-	"./mr": 77,
-	"./mr.js": 77,
-	"./ms": 78,
-	"./ms-my": 79,
-	"./ms-my.js": 79,
-	"./ms.js": 78,
-	"./mt": 80,
-	"./mt.js": 80,
-	"./my": 81,
-	"./my.js": 81,
-	"./nb": 82,
-	"./nb.js": 82,
-	"./ne": 83,
-	"./ne.js": 83,
-	"./nl": 84,
-	"./nl-be": 85,
-	"./nl-be.js": 85,
-	"./nl.js": 84,
-	"./nn": 86,
-	"./nn.js": 86,
-	"./pa-in": 87,
-	"./pa-in.js": 87,
-	"./pl": 88,
-	"./pl.js": 88,
-	"./pt": 89,
-	"./pt-br": 90,
-	"./pt-br.js": 90,
-	"./pt.js": 89,
-	"./ro": 91,
-	"./ro.js": 91,
-	"./ru": 92,
-	"./ru.js": 92,
-	"./sd": 93,
-	"./sd.js": 93,
-	"./se": 94,
-	"./se.js": 94,
-	"./si": 95,
-	"./si.js": 95,
-	"./sk": 96,
-	"./sk.js": 96,
-	"./sl": 97,
-	"./sl.js": 97,
-	"./sq": 98,
-	"./sq.js": 98,
-	"./sr": 99,
-	"./sr-cyrl": 100,
-	"./sr-cyrl.js": 100,
-	"./sr.js": 99,
-	"./ss": 101,
-	"./ss.js": 101,
-	"./sv": 102,
-	"./sv.js": 102,
-	"./sw": 103,
-	"./sw.js": 103,
-	"./ta": 104,
-	"./ta.js": 104,
-	"./te": 105,
-	"./te.js": 105,
-	"./tet": 106,
-	"./tet.js": 106,
-	"./tg": 107,
-	"./tg.js": 107,
-	"./th": 108,
-	"./th.js": 108,
-	"./tl-ph": 109,
-	"./tl-ph.js": 109,
-	"./tlh": 110,
-	"./tlh.js": 110,
-	"./tr": 111,
-	"./tr.js": 111,
-	"./tzl": 112,
-	"./tzl.js": 112,
-	"./tzm": 113,
-	"./tzm-latn": 114,
-	"./tzm-latn.js": 114,
-	"./tzm.js": 113,
-	"./ug-cn": 115,
-	"./ug-cn.js": 115,
-	"./uk": 116,
-	"./uk.js": 116,
-	"./ur": 117,
-	"./ur.js": 117,
-	"./uz": 118,
-	"./uz-latn": 119,
-	"./uz-latn.js": 119,
-	"./uz.js": 118,
-	"./vi": 120,
-	"./vi.js": 120,
-	"./x-pseudo": 121,
-	"./x-pseudo.js": 121,
-	"./yo": 122,
-	"./yo.js": 122,
-	"./zh-cn": 123,
-	"./zh-cn.js": 123,
-	"./zh-hk": 124,
-	"./zh-hk.js": 124,
-	"./zh-tw": 125,
-	"./zh-tw.js": 125
-};
-function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
-function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
-	return id;
-};
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = 133;
-
-/***/ }),
-/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;;/*! showdown v 1.9.0 - 10-11-2018 */
@@ -22267,7 +21873,605 @@ if (true) {
 
 
 /***/ }),
+/* 130 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(131);
+__webpack_require__(136);
+__webpack_require__(137);
+__webpack_require__(128);
+__webpack_require__(3);
+module.exports = __webpack_require__(127);
+
+
+/***/ }),
+/* 131 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _settings = __webpack_require__(1);
+
+var _api = __webpack_require__(2);
+
+var _issueList = __webpack_require__(3);
+
+var _issueMain = __webpack_require__(127);
+
+var _issueEdit = __webpack_require__(128);
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+(function ($) {
+	$(function () {
+		var load_issues = function () {
+			var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+				var issues, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, value;
+
+				return regeneratorRuntime.wrap(function _callee2$(_context2) {
+					while (1) {
+						switch (_context2.prev = _context2.next) {
+							case 0:
+								$loader.fadeIn(200);
+								_context2.next = 3;
+								return (0, _api.get_issues)(options);
+
+							case 3:
+								issues = _context2.sent;
+
+								if (issues.response) {
+									_context2.next = 7;
+									break;
+								}
+
+								alert('An unexpected error occured');
+								return _context2.abrupt('return');
+
+							case 7:
+
+								store = {};
+								$list.html('');
+								_iteratorNormalCompletion = true;
+								_didIteratorError = false;
+								_iteratorError = undefined;
+								_context2.prev = 12;
+								for (_iterator = issues[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+									value = _step.value;
+
+									store[value.iid] = (0, _api.parse_issue)(value);
+									$list.append((0, _issueList.templateIssueList)(store[value.iid]));
+								}
+								_context2.next = 20;
+								break;
+
+							case 16:
+								_context2.prev = 16;
+								_context2.t0 = _context2['catch'](12);
+								_didIteratorError = true;
+								_iteratorError = _context2.t0;
+
+							case 20:
+								_context2.prev = 20;
+								_context2.prev = 21;
+
+								if (!_iteratorNormalCompletion && _iterator.return) {
+									_iterator.return();
+								}
+
+							case 23:
+								_context2.prev = 23;
+
+								if (!_didIteratorError) {
+									_context2.next = 26;
+									break;
+								}
+
+								throw _iteratorError;
+
+							case 26:
+								return _context2.finish(23);
+
+							case 27:
+								return _context2.finish(20);
+
+							case 28:
+								$loader.fadeOut(200);
+
+							case 29:
+							case 'end':
+								return _context2.stop();
+						}
+					}
+				}, _callee2, this, [[12, 16, 20, 28], [21,, 23, 27]]);
+			}));
+
+			return function load_issues() {
+				return _ref2.apply(this, arguments);
+			};
+		}();
+
+		var $page = $('.hit-page');
+		var $container = $page.find('.hit-issues');
+		var $loader = $container.find('.hit-issues__loader');
+		var $options = $container.find('.hit-issues__option select');
+		var $list = $container.find('.hit-issues__list');
+		var $main = $page.find('.hit-page__main');
+		var $editWindow = $('.js-hit-edit-window');
+		var options = {};
+		var store = {};
+		var descriptionEditorID = '#hit-edit-description';
+		var tinymce = window.tinymce;
+		var changes = false;
+
+		$page.on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
+
+			var issue = false;
+			changes = false;
+			var iid = $(this).attr('data-iid');
+			if (typeof iid !== 'undefined') {
+				issue = store[iid];
+			}
+
+			$editWindow.find('.js-hit-edit-content').html((0, _issueEdit.templateIssueForm)(issue));
+			tinymce.init({
+				selector: descriptionEditorID,
+				toolbar: 'formatselect | bold italic link image | bullist numlist',
+				menubar: false,
+				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
+				plugins: 'lists autoresize link',
+				autoresize_bottom_margin: 5,
+				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
+			});
+
+			$('.js-hit-edit-content .hit-edit__input').on('change', function () {
+				changes = true;
+			});
+
+			$('.js-hit-edit-content .js-hit-edit-form').on('submit', function () {
+				var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+					var $formLoading, submitted, newIssue, $listElement;
+					return regeneratorRuntime.wrap(function _callee$(_context) {
+						while (1) {
+							switch (_context.prev = _context.next) {
+								case 0:
+									e.preventDefault();
+									$formLoading = $('.hit-edit__loader');
+
+									$formLoading.fadeIn(200);
+									_context.next = 5;
+									return (0, _issueEdit.submitForm)($(this));
+
+								case 5:
+									submitted = _context.sent;
+
+									$formLoading.fadeOut(200);
+
+									if (submitted.response) {
+										_context.next = 10;
+										break;
+									}
+
+									alert('An unexpected error occured');
+									return _context.abrupt('return');
+
+								case 10:
+									changes = false;
+									newIssue = (0, _api.parse_issue)(submitted);
+
+									store[newIssue.iid] = newIssue;
+									$listElement = $list.find('[data-iid="' + newIssue.iid + '"]');
+
+									if (!$listElement.length) {
+										$list.prepend((0, _issueList.templateIssueList)(store[newIssue.iid]));
+									} else {
+										$listElement.replaceWith((0, _issueList.templateIssueList)(store[newIssue.iid]));
+									}
+									$main.html((0, _issueMain.templateIssueMain)(store[newIssue.iid]));
+									$editWindow.fadeOut(200, function () {
+										tinymce.remove(descriptionEditorID);
+									});
+
+								case 17:
+								case 'end':
+									return _context.stop();
+							}
+						}
+					}, _callee, this);
+				}));
+
+				return function (_x) {
+					return _ref.apply(this, arguments);
+				};
+			}());
+
+			$editWindow.fadeIn(200);
+		});
+
+		$('.js-hit-edit-close').on('click', function () {
+			if (changes) {
+				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
+					return;
+				}
+			}
+			$editWindow.fadeOut(200, function () {
+				tinymce.remove(descriptionEditorID);
+			});
+		});
+
+		$options.on('change', function () {
+			set_options();
+			load_issues();
+		});
+
+		set_options();
+		load_issues();
+
+		$page.on('click', '.hit-issue-list', function () {
+			var iid = $(this).attr('data-iid');
+			$main.html((0, _issueMain.templateIssueMain)(store[iid]));
+		});
+
+		function set_options() {
+			$options.each(function () {
+				options[$(this).attr('name')] = $(this).val();
+			});
+		}
+	});
+})(jQuery);
+
+/***/ }),
+/* 132 */
+/***/ (function(module, exports) {
+
+module.exports = {"colors":{"black":{"base":"#000","dark":"#000","light":"#7C7C7B"},"grey":{"base":"#e5e5e5","light":"#f8f8f8"},"white":{"base":"#fff"},"blue":{"base":"#0073aa"},"red":{"base":"#e3000b"},"green":{"base":"#1aaa55"},"orange":{"base":"#ff9c2f"}}}
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 134 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./af": 4,
+	"./af.js": 4,
+	"./ar": 5,
+	"./ar-dz": 6,
+	"./ar-dz.js": 6,
+	"./ar-kw": 7,
+	"./ar-kw.js": 7,
+	"./ar-ly": 8,
+	"./ar-ly.js": 8,
+	"./ar-ma": 9,
+	"./ar-ma.js": 9,
+	"./ar-sa": 10,
+	"./ar-sa.js": 10,
+	"./ar-tn": 11,
+	"./ar-tn.js": 11,
+	"./ar.js": 5,
+	"./az": 12,
+	"./az.js": 12,
+	"./be": 13,
+	"./be.js": 13,
+	"./bg": 14,
+	"./bg.js": 14,
+	"./bm": 15,
+	"./bm.js": 15,
+	"./bn": 16,
+	"./bn.js": 16,
+	"./bo": 17,
+	"./bo.js": 17,
+	"./br": 18,
+	"./br.js": 18,
+	"./bs": 19,
+	"./bs.js": 19,
+	"./ca": 20,
+	"./ca.js": 20,
+	"./cs": 21,
+	"./cs.js": 21,
+	"./cv": 22,
+	"./cv.js": 22,
+	"./cy": 23,
+	"./cy.js": 23,
+	"./da": 24,
+	"./da.js": 24,
+	"./de": 25,
+	"./de-at": 26,
+	"./de-at.js": 26,
+	"./de-ch": 27,
+	"./de-ch.js": 27,
+	"./de.js": 25,
+	"./dv": 28,
+	"./dv.js": 28,
+	"./el": 29,
+	"./el.js": 29,
+	"./en-au": 30,
+	"./en-au.js": 30,
+	"./en-ca": 31,
+	"./en-ca.js": 31,
+	"./en-gb": 32,
+	"./en-gb.js": 32,
+	"./en-ie": 33,
+	"./en-ie.js": 33,
+	"./en-il": 34,
+	"./en-il.js": 34,
+	"./en-nz": 35,
+	"./en-nz.js": 35,
+	"./eo": 36,
+	"./eo.js": 36,
+	"./es": 37,
+	"./es-do": 38,
+	"./es-do.js": 38,
+	"./es-us": 39,
+	"./es-us.js": 39,
+	"./es.js": 37,
+	"./et": 40,
+	"./et.js": 40,
+	"./eu": 41,
+	"./eu.js": 41,
+	"./fa": 42,
+	"./fa.js": 42,
+	"./fi": 43,
+	"./fi.js": 43,
+	"./fo": 44,
+	"./fo.js": 44,
+	"./fr": 45,
+	"./fr-ca": 46,
+	"./fr-ca.js": 46,
+	"./fr-ch": 47,
+	"./fr-ch.js": 47,
+	"./fr.js": 45,
+	"./fy": 48,
+	"./fy.js": 48,
+	"./gd": 49,
+	"./gd.js": 49,
+	"./gl": 50,
+	"./gl.js": 50,
+	"./gom-latn": 51,
+	"./gom-latn.js": 51,
+	"./gu": 52,
+	"./gu.js": 52,
+	"./he": 53,
+	"./he.js": 53,
+	"./hi": 54,
+	"./hi.js": 54,
+	"./hr": 55,
+	"./hr.js": 55,
+	"./hu": 56,
+	"./hu.js": 56,
+	"./hy-am": 57,
+	"./hy-am.js": 57,
+	"./id": 58,
+	"./id.js": 58,
+	"./is": 59,
+	"./is.js": 59,
+	"./it": 60,
+	"./it.js": 60,
+	"./ja": 61,
+	"./ja.js": 61,
+	"./jv": 62,
+	"./jv.js": 62,
+	"./ka": 63,
+	"./ka.js": 63,
+	"./kk": 64,
+	"./kk.js": 64,
+	"./km": 65,
+	"./km.js": 65,
+	"./kn": 66,
+	"./kn.js": 66,
+	"./ko": 67,
+	"./ko.js": 67,
+	"./ky": 68,
+	"./ky.js": 68,
+	"./lb": 69,
+	"./lb.js": 69,
+	"./lo": 70,
+	"./lo.js": 70,
+	"./lt": 71,
+	"./lt.js": 71,
+	"./lv": 72,
+	"./lv.js": 72,
+	"./me": 73,
+	"./me.js": 73,
+	"./mi": 74,
+	"./mi.js": 74,
+	"./mk": 75,
+	"./mk.js": 75,
+	"./ml": 76,
+	"./ml.js": 76,
+	"./mn": 77,
+	"./mn.js": 77,
+	"./mr": 78,
+	"./mr.js": 78,
+	"./ms": 79,
+	"./ms-my": 80,
+	"./ms-my.js": 80,
+	"./ms.js": 79,
+	"./mt": 81,
+	"./mt.js": 81,
+	"./my": 82,
+	"./my.js": 82,
+	"./nb": 83,
+	"./nb.js": 83,
+	"./ne": 84,
+	"./ne.js": 84,
+	"./nl": 85,
+	"./nl-be": 86,
+	"./nl-be.js": 86,
+	"./nl.js": 85,
+	"./nn": 87,
+	"./nn.js": 87,
+	"./pa-in": 88,
+	"./pa-in.js": 88,
+	"./pl": 89,
+	"./pl.js": 89,
+	"./pt": 90,
+	"./pt-br": 91,
+	"./pt-br.js": 91,
+	"./pt.js": 90,
+	"./ro": 92,
+	"./ro.js": 92,
+	"./ru": 93,
+	"./ru.js": 93,
+	"./sd": 94,
+	"./sd.js": 94,
+	"./se": 95,
+	"./se.js": 95,
+	"./si": 96,
+	"./si.js": 96,
+	"./sk": 97,
+	"./sk.js": 97,
+	"./sl": 98,
+	"./sl.js": 98,
+	"./sq": 99,
+	"./sq.js": 99,
+	"./sr": 100,
+	"./sr-cyrl": 101,
+	"./sr-cyrl.js": 101,
+	"./sr.js": 100,
+	"./ss": 102,
+	"./ss.js": 102,
+	"./sv": 103,
+	"./sv.js": 103,
+	"./sw": 104,
+	"./sw.js": 104,
+	"./ta": 105,
+	"./ta.js": 105,
+	"./te": 106,
+	"./te.js": 106,
+	"./tet": 107,
+	"./tet.js": 107,
+	"./tg": 108,
+	"./tg.js": 108,
+	"./th": 109,
+	"./th.js": 109,
+	"./tl-ph": 110,
+	"./tl-ph.js": 110,
+	"./tlh": 111,
+	"./tlh.js": 111,
+	"./tr": 112,
+	"./tr.js": 112,
+	"./tzl": 113,
+	"./tzl.js": 113,
+	"./tzm": 114,
+	"./tzm-latn": 115,
+	"./tzm-latn.js": 115,
+	"./tzm.js": 114,
+	"./ug-cn": 116,
+	"./ug-cn.js": 116,
+	"./uk": 117,
+	"./uk.js": 117,
+	"./ur": 118,
+	"./ur.js": 118,
+	"./uz": 119,
+	"./uz-latn": 120,
+	"./uz-latn.js": 120,
+	"./uz.js": 119,
+	"./vi": 121,
+	"./vi.js": 121,
+	"./x-pseudo": 122,
+	"./x-pseudo.js": 122,
+	"./yo": 123,
+	"./yo.js": 123,
+	"./zh-cn": 124,
+	"./zh-cn.js": 124,
+	"./zh-hk": 125,
+	"./zh-hk.js": 125,
+	"./zh-tw": 126,
+	"./zh-tw.js": 126
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 134;
+
+/***/ }),
 /* 135 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+//
+// Use internal $.serializeArray to get list of form elements which is
+// consistent with $.serialize
+//
+// From version 2.0.0, $.serializeObject will stop converting [name] values
+// to camelCase format. This is *consistent* with other serialize methods:
+//
+//   - $.serialize
+//   - $.serializeArray
+//
+// If you require camel casing, you can either download version 1.0.4 or map
+// them yourself.
+//
+
+(function ($) {
+	$.fn.serializeObject = function () {
+		"use strict";
+
+		var result = {};
+		var extend = function extend(i, element) {
+			var node = result[element.name];
+
+			// If node with same name exists already, need to convert it to an array as it
+			// is a multi-value field (i.e., checkboxes)
+
+			if ('undefined' !== typeof node && node !== null) {
+				if ($.isArray(node)) {
+					node.push(element.value);
+				} else {
+					result[element.name] = [node, element.value];
+				}
+			} else {
+				result[element.name] = element.value;
+			}
+		};
+
+		$.each(this.serializeArray(), extend);
+		return result;
+	};
+})(jQuery);
+
+/***/ }),
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22324,7 +22528,7 @@ var _settings = __webpack_require__(1);
 })(jQuery);
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

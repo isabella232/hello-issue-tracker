@@ -39,7 +39,7 @@ class MenuPage {
 						$options = [
 							'state' => [
 								'title'   => __( 'Status', 'hit' ),
-								'choices' => [ 'opened', 'closed' ]
+								'choices' => Assets::issue_vars()['states'],
 							],
 						];
 
@@ -47,13 +47,8 @@ class MenuPage {
 							echo "<div class='hit-issues__option'>";
 							echo "<label for='hit-issues-option-{$option_key}'>{$option['title']}</label>";
 							echo "<select name='{$option_key}' id='hit-issues-option-{$option_key}'>";
-							foreach ( $option['choices'] as $choice_key ) {
-								$translations = Assets::get_translations();
-								$label        = $choice_key;
-								if ( array_key_exists( $choice_key, $translations ) ) {
-									$label = $translations[ $choice_key ];
-								}
-								echo "<option value='{$choice_key}'>{$label}</option>";
+							foreach ( $option['choices'] as $choice_key => $choice_label ) {
+								echo "<option value='{$choice_key}'>{$choice_label}</option>";
 							}
 							echo '</select>';
 							echo '</div>';
