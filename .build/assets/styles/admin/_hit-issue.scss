@@ -110,6 +110,10 @@
 			font-size: .6rem;
 		}
 
+		&--big {
+			font-size: .9rem;
+		}
+
 		&--type {
 			&-bug {
 				background-color: c(orange);
@@ -127,5 +131,62 @@
 				background-color: c(orange);
 			}
 		}
+
+		&--color {
+			&-green {
+				background-color: c(green);
+			}
+		}
+	}
+
+	.hit-issue {
+		padding: 0 $padding*2;
+		font-size: 16px;
+		p {
+			margin: 0;
+			font-size: 16px;
+		}
+
+		&__created {
+			display: block;
+			margin-right: auto;
+		}
+		&__header {
+			border-top: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			margin-bottom: $padding*2;
+			padding: $padding*.8 0;
+			font-size: 14px;
+			.hit-issue-label {
+				margin-left: $padding;
+			}
+		}
+
+		&__status {
+			margin-bottom: $padding*2;
+			.hit-issue-label {
+				margin: 0 $padding*2 0 $padding;
+			}
+		}
+
+		&__title {
+			font-size: 30px;
+			line-height: 1.2;
+			margin: 0 0 $padding 0;
+		}
+	}
+
+	.button--close {
+		background-color: c(green);
+		&:hover {
+			background-color: lighten(c(green), 3%);
+			color: #fff;
+		}
+		margin-right: $padding;
+		color: #fff;
+		border-color: darken(c(green), 10%);
 	}
 }

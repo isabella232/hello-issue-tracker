@@ -323,6 +323,8 @@
     display: none; }
   .hello-issue-tracker .hit-issue-label--small {
     font-size: .6rem; }
+  .hello-issue-tracker .hit-issue-label--big {
+    font-size: .9rem; }
   .hello-issue-tracker .hit-issue-label--type-bug {
     background-color: #ff9c2f; }
   .hello-issue-tracker .hit-issue-label--type-bug {
@@ -331,3 +333,43 @@
     background-color: #e3000b; }
   .hello-issue-tracker .hit-issue-label--prio-normal {
     background-color: #ff9c2f; }
+  .hello-issue-tracker .hit-issue-label--color-green {
+    background-color: #1aaa55; }
+
+.hello-issue-tracker .hit-issue {
+  padding: 0 1.6rem;
+  font-size: 16px; }
+  .hello-issue-tracker .hit-issue p {
+    margin: 0;
+    font-size: 16px; }
+  .hello-issue-tracker .hit-issue__created {
+    display: block;
+    margin-right: auto; }
+  .hello-issue-tracker .hit-issue__header {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1.6rem;
+    padding: 0.64rem 0;
+    font-size: 14px; }
+    .hello-issue-tracker .hit-issue__header .hit-issue-label {
+      margin-left: 0.8rem; }
+  .hello-issue-tracker .hit-issue__status {
+    margin-bottom: 1.6rem; }
+    .hello-issue-tracker .hit-issue__status .hit-issue-label {
+      margin: 0 1.6rem 0 0.8rem; }
+  .hello-issue-tracker .hit-issue__title {
+    font-size: 30px;
+    line-height: 1.2;
+    margin: 0 0 0.8rem 0; }
+
+.hello-issue-tracker .button--close {
+  background-color: #1aaa55;
+  margin-right: 0.8rem;
+  color: #fff;
+  border-color: #137e3f; }
+  .hello-issue-tracker .button--close:hover {
+    background-color: #1cb75c;
+    color: #fff; }

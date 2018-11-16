@@ -6,6 +6,10 @@ class Assets {
 
 	public static function add_assets() {
 
+		if ( ! isset( $_GET['page'] ) || Plugin::prefix() . '-admin-page.php' != $_GET['page'] ) {
+			return;
+		}
+
 		$script_version = Plugin::version();
 		$plugin_prefix  = Plugin::prefix();
 

@@ -2,7 +2,7 @@ import {plugin} from './settings.js';
 
 const apiBase = `${plugin.APIbase}api/v4/`;
 
-function do_api(path, data = {}, type = 'GET') {
+export const do_api = function do_api(path, data = {}, type = 'GET') {
 	if (!plugin.key) {
 		return false;
 	}

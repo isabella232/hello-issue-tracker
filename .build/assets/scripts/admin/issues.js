@@ -1,5 +1,5 @@
 import {plugin} from './modules/settings.js';
-import {get, get_issues, parse_issue} from './modules/api';
+import {do_api, get_issues, parse_issue} from './modules/api';
 import {templateIssueList} from './template/issue-list';
 import {templateIssueMain} from './template/issue-main';
 import {templateIssueForm, submitForm} from './template/issue-edit';
@@ -69,6 +69,33 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			});
 
 			$editWindow.fadeIn(200);
+		});
+
+		$page.on('click', '.js-hit-close-issue', async function () {
+
+			const iid = $(this).attr('data-iid');
+			if (typeof iid === 'undefined' || !plugin.repo) {
+				return;
+			}
+
+			if (!confirm('Are you sure you want to close this issue?')) {
+				return;
+			}
+
+			const issue = await do_api(`projects/${plugin.repo}/issues/${iid}`, {
+				state_event: 'close'
+			}, 'PUT');
+
+			if (!issue.response) {
+				alert('An unexpected error occured');
+				return;
+			}
+
+			$('#hit-issues-option-state').val('closed');
+			set_options();
+			load_issues().then(() => {
+				$main.html(templateIssueMain(store[iid]));
+			});
 		});
 
 		$('.js-hit-edit-close').on('click', function () {
