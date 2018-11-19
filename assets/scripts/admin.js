@@ -22064,6 +22064,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 		}();
 
 		var $page = $('.hit-page');
+		if (!$page.length) {
+			return;
+		}
 		var $container = $page.find('.hit-issues');
 		var $loader = $container.find('.hit-issues__loader');
 		var $options = $container.find('.hit-issues__option select');

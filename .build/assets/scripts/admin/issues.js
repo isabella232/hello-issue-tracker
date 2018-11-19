@@ -8,6 +8,9 @@ import moment from "moment/moment";
 (function ($) {
 	$(function () {
 		const $page = $('.hit-page');
+		if (!$page.length) {
+			return;
+		}
 		const $container = $page.find('.hit-issues');
 		const $loader = $container.find('.hit-issues__loader');
 		const $options = $container.find('.hit-issues__option select');
