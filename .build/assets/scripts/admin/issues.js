@@ -169,7 +169,7 @@ import moment from "moment/moment";
 				}
 
 				for (const comment of resp) {
-					if (typeof comment !== 'object') {
+					if (typeof comment !== 'object' || comment.system) {
 						continue;
 					}
 

@@ -22320,7 +22320,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 					for (var _iterator = resp[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 						var comment = _step.value;
 
-						if ((typeof comment === 'undefined' ? 'undefined' : _typeof(comment)) !== 'object') {
+						if ((typeof comment === 'undefined' ? 'undefined' : _typeof(comment)) !== 'object' || comment.system) {
 							continue;
 						}
 
