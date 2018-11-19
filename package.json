@@ -7,6 +7,8 @@
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.4",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.7.0",
         "babel-register": "^6.26.0",
         "fs": "0.0.1-security",
@@ -38,8 +40,16 @@
     "babel": {
         "presets": [
             "env"
+        ],
+        "plugins": [
+            [
+                "transform-runtime",
+                {
+                    "regenerator": true
+                }
+            ]
         ]
     },
-    "version": "0.1.9",
+    "version": "0.1.10",
     "main": "gulpfile.babel.js"
 }
