@@ -22239,7 +22239,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 		set_options();
 		load_issues().then(function () {
-			console.log(store);
 			if (window.location.hash !== '') {
 				var currentIssue = window.location.hash.replace('#', '');
 				set_main(currentIssue);

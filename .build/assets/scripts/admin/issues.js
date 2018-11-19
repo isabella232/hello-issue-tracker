@@ -123,7 +123,6 @@ import moment from "moment/moment";
 
 		set_options();
 		load_issues().then(() => {
-			console.log(store);
 			if (window.location.hash !== '') {
 				const currentIssue = window.location.hash.replace('#', '');
 				set_main(currentIssue);
