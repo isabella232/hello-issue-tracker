@@ -1,8 +1,9 @@
 import {plugin} from './modules/settings.js';
 import {do_api, get_issues, parse_issue, load_comments} from './modules/api';
 import {templateIssueList} from './template/issue-list';
-import {templateIssueMain} from './template/issue-main';
+import {templateIssueMain, submitComment} from './template/issue-main';
 import {templateIssueForm, submitForm} from './template/issue-edit';
+import moment from "moment/moment";
 
 (function ($) {
 	$(function () {
@@ -16,7 +17,16 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 		let options = {};
 		let store = {};
 		const descriptionEditorID = '#hit-edit-description';
+		const commentEditorID = '#hit-edit-comment-body';
 		const tinymce = window.tinymce;
+		const tinymceOptions = {
+			toolbar: 'formatselect | bold italic link image | bullist numlist',
+			menubar: false,
+			block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
+			plugins: 'lists autoresize link',
+			autoresize_bottom_margin: 5,
+			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}",
+		};
 		let changes = false;
 
 		$page.on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
@@ -29,15 +39,10 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			}
 
 			$editWindow.find('.js-hit-edit-content').html(templateIssueForm(issue));
-			tinymce.init({
-				selector: descriptionEditorID,
-				toolbar: 'formatselect | bold italic link image | bullist numlist',
-				menubar: false,
-				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
-				plugins: 'lists autoresize link',
-				autoresize_bottom_margin: 5,
-				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}",
-			});
+			tinymce.init(Object.assign({
+					selector: descriptionEditorID,
+				}, tinymceOptions
+			));
 
 			$('.js-hit-edit-content .hit-edit__input').on('change', () => {
 				changes = true;
@@ -47,12 +52,13 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 				e.preventDefault();
 				const $formLoading = $('.hit-edit__loader');
 				$formLoading.fadeIn(200);
-				const submitted = await submitForm($(this));
-				$formLoading.fadeOut(200);
+				const submitted = await submitForm($(this), store);
 				if (!submitted.response) {
-					alert('An unexpected error occured');
+					$formLoading.append('<div class="hit-loader__error">An unexpected error occured</div>');
+					$formLoading.addClass('hit-loader--error');
 					return;
 				}
+				$formLoading.fadeOut(200);
 				changes = false;
 				const newIssue = parse_issue(submitted);
 				store[newIssue.iid] = newIssue;
@@ -98,12 +104,13 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			});
 		});
 
-		$page.on('click', '.js-hit-edit-close', function () {
+		$('body').on('click', '.js-hit-edit-close', function () {
 			if (changes) {
 				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
 					return;
 				}
 			}
+
 			$editWindow.fadeOut(200, () => {
 				tinymce.remove(descriptionEditorID);
 			});
@@ -115,7 +122,13 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 		});
 
 		set_options();
-		load_issues();
+		load_issues().then(() => {
+			console.log(store);
+			if (window.location.hash !== '') {
+				const currentIssue = window.location.hash.replace('#', '');
+				set_main(currentIssue);
+			}
+		});
 
 		$page.on('click', '.hit-issue-list', function () {
 			const iid = $(this).attr('data-iid');
@@ -123,9 +136,66 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 		});
 
 		function set_main(iid) {
+			if (!iid in store) {
+				return;
+			}
+
+			tinymce.remove(commentEditorID);
 			$main.html(templateIssueMain(store[iid]));
+			tinymce.init(Object.assign({
+					selector: commentEditorID,
+				}, tinymceOptions
+			));
+
+			$('.js-hit-new-comment-form').on('submit', async function (e) {
+				e.preventDefault();
+				const $commentLoader = $('.hit-comments__loader');
+				$commentLoader.fadeIn(200);
+				const submitted = await submitComment($(this));
+				if (!submitted.response) {
+					$commentLoader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+					$commentLoader.addClass('hit-loader--error');
+					return;
+				}
+				set_main(iid);
+			});
+
 			load_comments(iid).then(resp => {
-				console.log(resp)
+				const $commentLoader = $('.hit-comments__loader');
+				const $commentList = $('.hit-comments__list');
+				if (!resp.response) {
+					$commentLoader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+					$commentLoader.addClass('hit-loader--error');
+					return;
+				}
+
+				for (const comment of resp) {
+					if (typeof comment !== 'object') {
+						continue;
+					}
+
+					const showdown = require('showdown');
+					let body = comment.body || '';
+					const converter = new showdown.Converter();
+					body = converter.makeHtml(body);
+					const pPrefix = converter.makeHtml(plugin.labelPrefix).replace('<p>', '').replace('</p>', '');
+					const date = moment(comment.created_at).format('MMMM Do YYYY, h:mm a');
+
+					let author = comment.author.name;
+					const regex = new RegExp(`<p>${pPrefix}author: ([^<]*)<\/p>`);
+					const regexExec = regex.exec(body);
+					if (regexExec) {
+						author = regexExec[1];
+						body = body.replace(regexExec[0], '');
+					}
+
+					$commentList.append(`<li>
+						${body}
+						<span class="hit-comments__comment-meta"><b>${author}</b> / ${date}</span>
+					</li>`);
+				}
+
+				$commentLoader.fadeOut(200);
 			});
 		}
 
@@ -133,7 +203,8 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			$loader.fadeIn(200);
 			const issues = await get_issues(options);
 			if (!issues.response) {
-				alert('An unexpected error occured');
+				$loader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+				$loader.addClass('hit-loader--error');
 				return;
 			}
 
@@ -152,4 +223,5 @@ import {templateIssueForm, submitForm} from './template/issue-edit';
 			});
 		}
 	});
-})(jQuery);
+})
+(jQuery);

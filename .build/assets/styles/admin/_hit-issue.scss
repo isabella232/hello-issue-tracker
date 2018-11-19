@@ -180,7 +180,7 @@
 
 		&__description {
 			padding-bottom: $padding*2;
-			border-bottom: 1px solid #ccc;
+			//border-bottom: 1px solid #ccc;
 			* + * {
 				margin-top: 1em !important;
 			}
@@ -189,24 +189,6 @@
 		&__comments {
 			min-height: 100px;
 			position: relative;
-		}
-
-		&__comment-loader {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			left: 0;
-			top: 0;
-			background-color: rgba(#f1f1f1, .8);
-			&:after {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				content: '';
-				font-size: 40px;
-				margin: -20px 0 0 -20px;
-				@include spinner(3px solid #000);
-			}
 		}
 	}
 

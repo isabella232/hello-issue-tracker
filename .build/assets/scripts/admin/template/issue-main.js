@@ -1,5 +1,6 @@
 import moment from "moment/moment";
 import {plugin} from "../modules/settings";
+import {create_comment} from "../modules/api";
 
 export const templateIssueMain = function (issue) {
 
@@ -32,9 +33,40 @@ export const templateIssueMain = function (issue) {
 				<span class="hit-issue__labels">${issue.labels.map(label => `<span class="hit-issue-label hit-issue-label--small">${label}</span>`).join(' ')}</span>
 			</div>			
 			<div class="hit-issue__description">${description}</div>
-			<div class="hit-issue__comments">
-				<ul class="hit-issue__comment-list"></ul>
-				<div class="hit-issue__comment-loader"></div>
+			<div class="hit-issue__comments hit-comments">
+				<ul class="hit-comments__list"></ul>
+				<form action="" class="hit-comments__form hit-edit js-hit-new-comment-form">
+					<input type="hidden" name="iid" value="${issue.iid || 'new'}" />
+					<div class="hit-edit__element">
+						<textarea id="hit-edit-comment-body" class="hit-edit__textarea" name="body"></textarea>
+					</div>
+					<div class="hit-edit__element hit-edit__element--controls">
+						<button type="submit" class="button button-primary">${'Add comment'}</button>
+					</div>
+				</form>
+				<div class="hit-comments__loader hit-loader hit-loader--gray hit-loader--small"></div>
 			</div>	
 		</div>`;
+};
+
+export const submitComment = function ($form) {
+
+	const input = $form.serializeObject();
+	const data = {};
+
+	if ('' === input.body) {
+		return {
+			response: false
+		};
+	}
+
+	const showdown = require('showdown');
+	const converter = new showdown.Converter();
+	input.body += `<p>${plugin.labelPrefix}author: ${plugin.user}</p>`;
+
+	data.body = converter.makeMarkdown(input.body);
+
+	return new Promise(resolve => {
+		resolve(create_comment(input.iid, data));
+	});
 };

@@ -4,6 +4,71 @@
   100% {
     transform: rotate(360deg); } }
 
+.hello-issue-tracker .hit-loader,
+.hit-window .hit-loader {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.8); }
+  .hello-issue-tracker .hit-loader:after,
+  .hit-window .hit-loader:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: '';
+    font-size: 60px;
+    margin: -30px 0 0 -30px;
+    background-color: transparent;
+    border: 5px solid #000;
+    border-radius: 50%;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    animation: spinner 0.65s infinite linear; }
+  .hello-issue-tracker .hit-loader--small:after,
+  .hit-window .hit-loader--small:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: '';
+    font-size: 40px;
+    margin: -20px 0 0 -20px;
+    background-color: transparent;
+    border: 3px solid #000;
+    border-radius: 50%;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    animation: spinner 0.65s infinite linear; }
+  .hello-issue-tracker .hit-loader--gray,
+  .hit-window .hit-loader--gray {
+    background-color: rgba(241, 241, 241, 0.8); }
+  .hello-issue-tracker .hit-loader__error,
+  .hit-window .hit-loader__error {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 350px;
+    transform: translateX(-50%) translateY(-50%); }
+  .hello-issue-tracker .hit-loader--error:after,
+  .hit-window .hit-loader--error:after {
+    display: none; }
+  .hello-issue-tracker .hit-loader--error .hit-loader__error,
+  .hit-window .hit-loader--error .hit-loader__error {
+    display: block; }
+
 .hello-issue-tracker .hit-page {
   margin-top: 20px;
   display: flex;
@@ -109,31 +174,6 @@
     background-color: #f8f8f8; }
     .hello-issue-tracker .hit-issues__head .hit-issue-list__item:first-child {
       text-align: center; }
-  .hello-issue-tracker .hit-issues__loader {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.8); }
-    .hello-issue-tracker .hit-issues__loader:after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      content: '';
-      font-size: 60px;
-      margin: -30px 0 0 -30px;
-      background-color: transparent;
-      border: 5px solid #000;
-      border-radius: 50%;
-      border-top-color: transparent;
-      border-right-color: transparent;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      vertical-align: middle;
-      box-sizing: border-box;
-      animation: spinner 0.65s infinite linear; }
   .hello-issue-tracker .hit-issues__list {
     max-height: calc(100vh - 300px);
     overflow: auto; }
@@ -216,31 +256,43 @@
       border: 1px solid #ccc; }
     .hit-edit .mce-tinymce .mce-statusbar {
       display: none; }
-  .hit-edit__loader {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.8); }
-    .hit-edit__loader:after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+
+.hello-issue-tracker .hit-comments {
+  border-left: 1px solid #ccc;
+  margin-left: 0.8rem;
+  padding-left: 1.6rem; }
+  .hello-issue-tracker .hit-comments__list li, .hello-issue-tracker .hit-comments__form {
+    font-size: 14px;
+    padding: 0.8rem;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    position: relative; }
+    .hello-issue-tracker .hit-comments__list li + li, .hello-issue-tracker .hit-comments__form + li {
+      margin-top: 1.6rem; }
+    .hello-issue-tracker .hit-comments__list li:before, .hello-issue-tracker .hit-comments__form:before {
       content: '';
-      font-size: 60px;
-      margin: -30px 0 0 -30px;
-      background-color: transparent;
-      border: 5px solid #000;
+      position: absolute;
+      left: calc(-1.6rem - 1px);
+      top: 0.8rem;
       border-radius: 50%;
-      border-top-color: transparent;
-      border-right-color: transparent;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      vertical-align: middle;
-      box-sizing: border-box;
-      animation: spinner 0.65s infinite linear; }
+      background-color: #d8d8d8;
+      width: 10px;
+      height: 10px;
+      transform: translateX(-50%); }
+  .hello-issue-tracker .hit-comments__list {
+    margin: 0; }
+  .hello-issue-tracker .hit-comments__form {
+    margin-top: 1.6rem; }
+  .hello-issue-tracker .hit-comments__comment-meta {
+    display: block;
+    margin-top: 1.6rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid #ccc;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #727272;
+    text-align: right; }
 
 .hello-issue-tracker .hit-issue-list {
   display: flex;
@@ -365,38 +417,12 @@
     line-height: 1.2;
     margin: 0 0 0.8rem 0; }
   .hello-issue-tracker .hit-issue__description {
-    padding-bottom: 1.6rem;
-    border-bottom: 1px solid #ccc; }
+    padding-bottom: 1.6rem; }
     .hello-issue-tracker .hit-issue__description * + * {
       margin-top: 1em !important; }
   .hello-issue-tracker .hit-issue__comments {
     min-height: 100px;
     position: relative; }
-  .hello-issue-tracker .hit-issue__comment-loader {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    top: 0;
-    background-color: rgba(241, 241, 241, 0.8); }
-    .hello-issue-tracker .hit-issue__comment-loader:after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      content: '';
-      font-size: 40px;
-      margin: -20px 0 0 -20px;
-      background-color: transparent;
-      border: 3px solid #000;
-      border-radius: 50%;
-      border-top-color: transparent;
-      border-right-color: transparent;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      vertical-align: middle;
-      box-sizing: border-box;
-      animation: spinner 0.65s infinite linear; }
 
 .hello-issue-tracker .button--close {
   background-color: #1aaa55;

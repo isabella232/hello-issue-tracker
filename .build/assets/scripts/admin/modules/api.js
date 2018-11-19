@@ -28,7 +28,7 @@ export const do_api = function do_api(path, data = {}, type = 'GET') {
 			},
 		});
 	});
-}
+};
 
 export const get_issues = function (options) {
 	if (!plugin.repo) {
@@ -63,6 +63,13 @@ export const load_comments = function (iid) {
 		return false;
 	}
 	return do_api(`projects/${plugin.repo}/issues/${iid}/notes`);
+};
+
+export const create_comment = function (iid, data) {
+	if (!plugin.repo) {
+		return false;
+	}
+	return do_api(`projects/${plugin.repo}/issues/${iid}/notes`, data, 'POST');
 };
 
 export const parse_issue = function (obj) {

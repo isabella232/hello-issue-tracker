@@ -64,7 +64,7 @@ class MenuPage {
 					<div class="hit-issue-list__item"><?php _e( 'Priority', 'hit' ); ?></div>
 				</div>
 				<div class="hit-issues__list"></div>
-				<div class="hit-issues__loader"></div>
+				<div class="hit-issues__loader hit-loader"></div>
 			</div>
 			<div class="hit-page__main"></div>
 		</div>

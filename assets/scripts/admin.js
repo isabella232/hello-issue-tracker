@@ -9761,7 +9761,7 @@ if (true) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.parse_issue = exports.load_comments = exports.update_issue = exports.create_issue = exports.get_issue = exports.get_issues = exports.do_api = undefined;
+exports.parse_issue = exports.create_comment = exports.load_comments = exports.update_issue = exports.create_issue = exports.get_issue = exports.get_issues = exports.do_api = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -9860,6 +9860,13 @@ var load_comments = exports.load_comments = function load_comments(iid) {
 		return false;
 	}
 	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid + '/notes');
+};
+
+var create_comment = exports.create_comment = function create_comment(iid, data) {
+	if (!_settings.plugin.repo) {
+		return false;
+	}
+	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid + '/notes', data, 'POST');
 };
 
 var parse_issue = exports.parse_issue = function parse_issue(obj) {
@@ -21804,13 +21811,15 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.templateIssueMain = undefined;
+exports.submitComment = exports.templateIssueMain = undefined;
 
 var _moment = __webpack_require__(0);
 
 var _moment2 = _interopRequireDefault(_moment);
 
 var _settings = __webpack_require__(1);
+
+var _api = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21833,7 +21842,29 @@ var templateIssueMain = exports.templateIssueMain = function templateIssueMain(i
 
 	return "<div class=\"hit-issue\">\n\t\t\t<header class=\"hit-issue__header\">\n\t\t\t\t<span class=\"hit-issue__created\"><b>" + author + "</b> / " + date + "</span>\n\t\t\t\t" + (issue.state === 'opened' ? "<button class=\"button button--close js-hit-close-issue\" data-iid=\"" + issue.iid + "\">Close Issue</button><button class=\"button button-primary js-hit-edit-issue\" data-iid=\"" + issue.iid + "\">Edit Issue</button>" : "<span class=\"hit-issue-label hit-issue-label--big hit-issue-label--color-green\">" + state + "</span>") + "\n\t\t\t</header>\n\t\t\t<div class=\"hit-issue__status\">\n\t\t\t\tType: <span class=\"hit-issue-label hit-issue-label--type-" + issue.hit_label.type + "\">" + type + "</span>\n\t\t\t\tPriority: <span class=\"hit-issue-label hit-issue-label--prio-" + issue.hit_label.priority + "\">" + priority + "</span>\n\t\t\t</div>\n\t\t\t<h2 class=\"hit-issue__title\">" + issue.title + "</h2>\n\t\t\t<div class=\"hit-issue__subtitle\">\t\t\t\n\t\t\t\t<span class=\"hit-issue__labels\">" + issue.labels.map(function (label) {
 		return "<span class=\"hit-issue-label hit-issue-label--small\">" + label + "</span>";
-	}).join(' ') + "</span>\n\t\t\t</div>\t\t\t\n\t\t\t<div class=\"hit-issue__description\">" + description + "</div>\n\t\t\t<div class=\"hit-issue__comments\">\n\t\t\t\t<ul class=\"hit-issue__comment-list\"></ul>\n\t\t\t\t<div class=\"hit-issue__comment-loader\"></div>\n\t\t\t</div>\t\n\t\t</div>";
+	}).join(' ') + "</span>\n\t\t\t</div>\t\t\t\n\t\t\t<div class=\"hit-issue__description\">" + description + "</div>\n\t\t\t<div class=\"hit-issue__comments hit-comments\">\n\t\t\t\t<ul class=\"hit-comments__list\"></ul>\n\t\t\t\t<form action=\"\" class=\"hit-comments__form hit-edit js-hit-new-comment-form\">\n\t\t\t\t\t<input type=\"hidden\" name=\"iid\" value=\"" + (issue.iid || 'new') + "\" />\n\t\t\t\t\t<div class=\"hit-edit__element\">\n\t\t\t\t\t\t<textarea id=\"hit-edit-comment-body\" class=\"hit-edit__textarea\" name=\"body\"></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"hit-edit__element hit-edit__element--controls\">\n\t\t\t\t\t\t<button type=\"submit\" class=\"button button-primary\">" + 'Add comment' + "</button>\n\t\t\t\t\t</div>\n\t\t\t\t</form>\n\t\t\t\t<div class=\"hit-comments__loader hit-loader hit-loader--gray hit-loader--small\"></div>\n\t\t\t</div>\t\n\t\t</div>";
+};
+
+var submitComment = exports.submitComment = function submitComment($form) {
+
+	var input = $form.serializeObject();
+	var data = {};
+
+	if ('' === input.body) {
+		return {
+			response: false
+		};
+	}
+
+	var showdown = __webpack_require__(2);
+	var converter = new showdown.Converter();
+	input.body += "<p>" + _settings.plugin.labelPrefix + "author: " + _settings.plugin.user + "</p>";
+
+	data.body = converter.makeMarkdown(input.body);
+
+	return new Promise(function (resolve) {
+		resolve((0, _api.create_comment)(input.iid, data));
+	});
 };
 
 /***/ }),
@@ -21867,13 +21898,12 @@ var templateIssueForm = exports.templateIssueForm = function templateIssueForm()
 		return '<option ' + (issue && issue.hit_label.priority === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.priorities[key] + '</option>';
 	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-type" class="hit-edit__label">Type</label>\n\t\t\t\t<select id="hit-edit-type" class="hit-edit__input" name="type">\n\t\t\t\t\t' + Object.keys(_settings.plugin.issue.types).map(function (key) {
 		return '<option ' + (issue && issue.hit_label.type === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.types[key] + '</option>';
-	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element hit-edit__element--controls">\n\t\t\t\t<button type="submit" class="button button-primary">' + (issue ? 'Update' : 'Create') + '</button>\n\t\t\t</div>\n\t\t\t<span class="hit-edit__loader" style="display: none;"></span>\n\t\t</form>';
+	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element hit-edit__element--controls">\n\t\t\t\t<button type="submit" class="button button-primary">' + (issue ? 'Update' : 'Create') + '</button>\n\t\t\t</div>\n\t\t\t<span class="hit-edit__loader hit-loader" style="display: none;"></span>\n\t\t</form>';
 };
 
-var submitForm = exports.submitForm = function submitForm($form) {
+var submitForm = exports.submitForm = function submitForm($form, store) {
 
 	var input = $form.serializeObject();
-	console.log(input);
 	var data = {};
 
 	data.title = input.title;
@@ -21885,11 +21915,19 @@ var submitForm = exports.submitForm = function submitForm($form) {
 	var labels = [_settings.plugin.labelPrefix + 'type: ' + input.type, _settings.plugin.labelPrefix + 'priority: ' + input.priority];
 	if (input.iid === 'new') {
 		labels.push(_settings.plugin.labelPrefix + 'author: ' + _settings.plugin.user);
+	} else {
+		labels.push(store[input.iid].hit_label.author);
 	}
+
+	store[input.iid].labels.forEach(function (label) {
+		if (!labels.includes(label) && '' !== label) {
+			labels.push(label);
+		}
+	});
+
 	data.labels = labels.join();
 
 	return new Promise(function (resolve) {
-		console.log(data);
 		if (input.iid === 'new') {
 			resolve((0, _api.create_issue)(data));
 		} else {
@@ -21917,6 +21955,8 @@ module.exports = __webpack_require__(128);
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _settings = __webpack_require__(1);
 
 var _api = __webpack_require__(3);
@@ -21927,93 +21967,100 @@ var _issueMain = __webpack_require__(128);
 
 var _issueEdit = __webpack_require__(129);
 
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 (function ($) {
 	$(function () {
 		var load_issues = function () {
-			var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-				var issues, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, value;
+			var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+				var issues, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, value;
 
-				return regeneratorRuntime.wrap(function _callee3$(_context3) {
+				return regeneratorRuntime.wrap(function _callee4$(_context4) {
 					while (1) {
-						switch (_context3.prev = _context3.next) {
+						switch (_context4.prev = _context4.next) {
 							case 0:
 								$loader.fadeIn(200);
-								_context3.next = 3;
+								_context4.next = 3;
 								return (0, _api.get_issues)(options);
 
 							case 3:
-								issues = _context3.sent;
+								issues = _context4.sent;
 
 								if (issues.response) {
-									_context3.next = 7;
+									_context4.next = 8;
 									break;
 								}
 
-								alert('An unexpected error occured');
-								return _context3.abrupt('return');
+								$loader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+								$loader.addClass('hit-loader--error');
+								return _context4.abrupt('return');
 
-							case 7:
+							case 8:
 
 								store = {};
 								$list.html('');
-								_iteratorNormalCompletion = true;
-								_didIteratorError = false;
-								_iteratorError = undefined;
-								_context3.prev = 12;
-								for (_iterator = issues[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-									value = _step.value;
+								_iteratorNormalCompletion2 = true;
+								_didIteratorError2 = false;
+								_iteratorError2 = undefined;
+								_context4.prev = 13;
+								for (_iterator2 = issues[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+									value = _step2.value;
 
 									store[value.iid] = (0, _api.parse_issue)(value);
 									$list.append((0, _issueList.templateIssueList)(store[value.iid]));
 								}
-								_context3.next = 20;
+								_context4.next = 21;
 								break;
 
-							case 16:
-								_context3.prev = 16;
-								_context3.t0 = _context3['catch'](12);
-								_didIteratorError = true;
-								_iteratorError = _context3.t0;
+							case 17:
+								_context4.prev = 17;
+								_context4.t0 = _context4['catch'](13);
+								_didIteratorError2 = true;
+								_iteratorError2 = _context4.t0;
 
-							case 20:
-								_context3.prev = 20;
-								_context3.prev = 21;
+							case 21:
+								_context4.prev = 21;
+								_context4.prev = 22;
 
-								if (!_iteratorNormalCompletion && _iterator.return) {
-									_iterator.return();
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
 								}
 
-							case 23:
-								_context3.prev = 23;
+							case 24:
+								_context4.prev = 24;
 
-								if (!_didIteratorError) {
-									_context3.next = 26;
+								if (!_didIteratorError2) {
+									_context4.next = 27;
 									break;
 								}
 
-								throw _iteratorError;
-
-							case 26:
-								return _context3.finish(23);
+								throw _iteratorError2;
 
 							case 27:
-								return _context3.finish(20);
+								return _context4.finish(24);
 
 							case 28:
-								$loader.fadeOut(200);
+								return _context4.finish(21);
 
 							case 29:
+								$loader.fadeOut(200);
+
+							case 30:
 							case 'end':
-								return _context3.stop();
+								return _context4.stop();
 						}
 					}
-				}, _callee3, this, [[12, 16, 20, 28], [21,, 23, 27]]);
+				}, _callee4, this, [[13, 17, 21, 29], [22,, 24, 28]]);
 			}));
 
 			return function load_issues() {
-				return _ref3.apply(this, arguments);
+				return _ref4.apply(this, arguments);
 			};
 		}();
 
@@ -22027,7 +22074,16 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 		var options = {};
 		var store = {};
 		var descriptionEditorID = '#hit-edit-description';
+		var commentEditorID = '#hit-edit-comment-body';
 		var tinymce = window.tinymce;
+		var tinymceOptions = {
+			toolbar: 'formatselect | bold italic link image | bullist numlist',
+			menubar: false,
+			block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
+			plugins: 'lists autoresize link',
+			autoresize_bottom_margin: 5,
+			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
+		};
 		var changes = false;
 
 		$page.on('click', '.js-hit-create-issue, .js-hit-edit-issue', function () {
@@ -22040,15 +22096,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 			}
 
 			$editWindow.find('.js-hit-edit-content').html((0, _issueEdit.templateIssueForm)(issue));
-			tinymce.init({
-				selector: descriptionEditorID,
-				toolbar: 'formatselect | bold italic link image | bullist numlist',
-				menubar: false,
-				block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
-				plugins: 'lists autoresize link',
-				autoresize_bottom_margin: 5,
-				content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
-			});
+			tinymce.init(Object.assign({
+				selector: descriptionEditorID
+			}, tinymceOptions));
 
 			$('.js-hit-edit-content .hit-edit__input').on('change', function () {
 				changes = true;
@@ -22066,22 +22116,22 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 									$formLoading.fadeIn(200);
 									_context.next = 5;
-									return (0, _issueEdit.submitForm)($(this));
+									return (0, _issueEdit.submitForm)($(this), store);
 
 								case 5:
 									submitted = _context.sent;
-
-									$formLoading.fadeOut(200);
 
 									if (submitted.response) {
 										_context.next = 10;
 										break;
 									}
 
-									alert('An unexpected error occured');
+									$formLoading.append('<div class="hit-loader__error">An unexpected error occured</div>');
+									$formLoading.addClass('hit-loader--error');
 									return _context.abrupt('return');
 
 								case 10:
+									$formLoading.fadeOut(200);
 									changes = false;
 									newIssue = (0, _api.parse_issue)(submitted);
 
@@ -22098,7 +22148,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 										tinymce.remove(descriptionEditorID);
 									});
 
-								case 17:
+								case 18:
 								case 'end':
 									return _context.stop();
 							}
@@ -22170,12 +22220,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 			}, _callee2, this);
 		})));
 
-		$page.on('click', '.js-hit-edit-close', function () {
+		$('body').on('click', '.js-hit-edit-close', function () {
 			if (changes) {
 				if (!confirm('Your data is not saved yet. Are you sure you want to close the window?')) {
 					return;
 				}
 			}
+
 			$editWindow.fadeOut(200, function () {
 				tinymce.remove(descriptionEditorID);
 			});
@@ -22187,7 +22238,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 		});
 
 		set_options();
-		load_issues();
+		load_issues().then(function () {
+			console.log(store);
+			if (window.location.hash !== '') {
+				var currentIssue = window.location.hash.replace('#', '');
+				set_main(currentIssue);
+			}
+		});
 
 		$page.on('click', '.hit-issue-list', function () {
 			var iid = $(this).attr('data-iid');
@@ -22195,9 +22252,112 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 		});
 
 		function set_main(iid) {
+			if (!iid in store) {
+				return;
+			}
+
+			tinymce.remove(commentEditorID);
 			$main.html((0, _issueMain.templateIssueMain)(store[iid]));
+			tinymce.init(Object.assign({
+				selector: commentEditorID
+			}, tinymceOptions));
+
+			$('.js-hit-new-comment-form').on('submit', function () {
+				var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+					var $commentLoader, submitted;
+					return regeneratorRuntime.wrap(function _callee3$(_context3) {
+						while (1) {
+							switch (_context3.prev = _context3.next) {
+								case 0:
+									e.preventDefault();
+									$commentLoader = $('.hit-comments__loader');
+
+									$commentLoader.fadeIn(200);
+									_context3.next = 5;
+									return (0, _issueMain.submitComment)($(this));
+
+								case 5:
+									submitted = _context3.sent;
+
+									if (submitted.response) {
+										_context3.next = 10;
+										break;
+									}
+
+									$commentLoader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+									$commentLoader.addClass('hit-loader--error');
+									return _context3.abrupt('return');
+
+								case 10:
+									set_main(iid);
+
+								case 11:
+								case 'end':
+									return _context3.stop();
+							}
+						}
+					}, _callee3, this);
+				}));
+
+				return function (_x2) {
+					return _ref3.apply(this, arguments);
+				};
+			}());
+
 			(0, _api.load_comments)(iid).then(function (resp) {
-				console.log(resp);
+				var $commentLoader = $('.hit-comments__loader');
+				var $commentList = $('.hit-comments__list');
+				if (!resp.response) {
+					$commentLoader.append('<div class="hit-loader__error">An unexpected error occured</div>');
+					$commentLoader.addClass('hit-loader--error');
+					return;
+				}
+
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = resp[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var comment = _step.value;
+
+						if ((typeof comment === 'undefined' ? 'undefined' : _typeof(comment)) !== 'object') {
+							continue;
+						}
+
+						var showdown = __webpack_require__(2);
+						var body = comment.body || '';
+						var converter = new showdown.Converter();
+						body = converter.makeHtml(body);
+						var pPrefix = converter.makeHtml(_settings.plugin.labelPrefix).replace('<p>', '').replace('</p>', '');
+						var date = (0, _moment2.default)(comment.created_at).format('MMMM Do YYYY, h:mm a');
+
+						var author = comment.author.name;
+						var regex = new RegExp('<p>' + pPrefix + 'author: ([^<]*)</p>');
+						var regexExec = regex.exec(body);
+						if (regexExec) {
+							author = regexExec[1];
+							body = body.replace(regexExec[0], '');
+						}
+
+						$commentList.append('<li>\n\t\t\t\t\t\t' + body + '\n\t\t\t\t\t\t<span class="hit-comments__comment-meta"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t\t</li>');
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				$commentLoader.fadeOut(200);
 			});
 		}
 

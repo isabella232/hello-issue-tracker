@@ -33,14 +33,13 @@ export const templateIssueForm = function (issue = false) {
 			<div class="hit-edit__element hit-edit__element--controls">
 				<button type="submit" class="button button-primary">${(issue ? 'Update' : 'Create')}</button>
 			</div>
-			<span class="hit-edit__loader" style="display: none;"></span>
+			<span class="hit-edit__loader hit-loader" style="display: none;"></span>
 		</form>`;
 };
 
-export const submitForm = function ($form) {
+export const submitForm = function ($form, store) {
 
 	const input = $form.serializeObject();
-	console.log(input);
 	const data = {};
 
 	data.title = input.title;
@@ -52,11 +51,19 @@ export const submitForm = function ($form) {
 	const labels = [`${plugin.labelPrefix}type: ${input.type}`, `${plugin.labelPrefix}priority: ${input.priority}`];
 	if (input.iid === 'new') {
 		labels.push(`${plugin.labelPrefix}author: ${plugin.user}`);
+	} else {
+		labels.push(store[input.iid].hit_label.author);
 	}
+
+	store[input.iid].labels.forEach((label) => {
+		if (!labels.includes(label) && '' !== label) {
+			labels.push(label);
+		}
+	});
+
 	data.labels = labels.join();
 
 	return new Promise(resolve => {
-		console.log(data);
 		if (input.iid === 'new') {
 			resolve(create_issue(data));
 		} else {
