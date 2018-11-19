@@ -44,6 +44,8 @@ class Assets {
 
 	public static function add_admin_assets() {
 
+		wp_enqueue_media();
+
 		$script_version = Plugin::version();
 		$plugin_prefix  = Plugin::prefix();
 
@@ -74,6 +76,9 @@ class Assets {
 			$deps[] = "tinyMCE-plugin-{$plugin}";
 		}
 
+		wp_enqueue_script( "{$plugin_prefix}-tinymce", $dir_uri . "assets/scripts/tinymce.min.js", $deps );
+		$deps[] = "{$plugin_prefix}-tinymce";
+
 		wp_enqueue_script( "{$plugin_prefix}-admin-script", $dir_uri . 'assets/scripts/admin' . ( $min ? '.min' : '' ) . '.js', $deps, $script_version, true );
 
 		/**
@@ -89,6 +94,13 @@ class Assets {
 		$vars       = json_encode( apply_filters( "{$plugin_prefix}_admin_js_vars", $defaults ) );
 		$vars_prefx = str_replace( '-', '', ucwords( $plugin_prefix, '-' ) );
 		wp_add_inline_script( "{$plugin_prefix}-admin-script", "var {$vars_prefx}Vars = {$vars};", 'before' );
+
+		/**
+		 * TinyMCE Vars
+		 */
+		$tinymce_vars       = json_encode( apply_filters( "{$plugin_prefix}_tinymce_vars", [] ) );
+		$tinymce_vars_prefx = str_replace( '-', '', ucwords( $plugin_prefix . 'TinyMCE', '-' ) );
+		wp_add_inline_script( "{$plugin_prefix}-tinymce", "var {$tinymce_vars_prefx}Vars = {$tinymce_vars};", 'before' );
 	}
 
 	public static function add_vars( $vars ) {
@@ -98,6 +110,20 @@ class Assets {
 		$vars['labelPrefix'] = apply_filters( 'hit_label_prefix', 'wp_' );
 		$vars['user']        = wp_get_current_user()->user_email;
 		$vars['issue']       = self::issue_vars();
+		$vars['dateFormat']  = __( 'MMMM Do YYYY, h:mm a', 'hit' );
+
+		return $vars;
+	}
+
+	public static function add_tinymce_vars( $vars ) {
+		$vars['hitimage'] = [
+			'image' => plugin_dir_url( Plugin::file() ) . 'assets/img/hitimage.png',
+			'texts' => [
+				'title'          => __( 'Add Image', 'hit' ),
+				'selectOrUpload' => __( 'Select or upload an image', 'hit' ),
+				'select'         => __( 'Select image', 'hit' ),
+			],
+		];
 
 		return $vars;
 	}

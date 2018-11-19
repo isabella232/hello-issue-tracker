@@ -181,6 +181,9 @@
 		&__description {
 			padding-bottom: $padding*2;
 			margin-top: $padding;
+			img {
+				max-width: 100% !important;
+			}
 			//border-bottom: 1px solid #ccc;
 			* + * {
 				margin-top: 1em !important;
@@ -190,6 +193,9 @@
 		&__comments {
 			min-height: 100px;
 			position: relative;
+			img {
+				max-width: 100% !important;
+			}
 		}
 	}
 

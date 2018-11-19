@@ -53,13 +53,12 @@ export const submitForm = function ($form, store) {
 		labels.push(`${plugin.labelPrefix}author: ${plugin.user}`);
 	} else {
 		labels.push(store[input.iid].hit_label.author);
+		store[input.iid].labels.forEach((label) => {
+			if (!labels.includes(label) && '' !== label) {
+				labels.push(label);
+			}
+		});
 	}
-
-	store[input.iid].labels.forEach((label) => {
-		if (!labels.includes(label) && '' !== label) {
-			labels.push(label);
-		}
-	});
 
 	data.labels = labels.join();
 

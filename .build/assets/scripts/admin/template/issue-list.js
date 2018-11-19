@@ -8,7 +8,7 @@ export const templateIssueList = function (issue) {
 		author = issue.hit_label.author;
 	}
 
-	const date = moment(issue.created_at).format('MMMM Do YYYY, h:mm a');
+	const date = moment(issue.created_at).format(plugin.dateFormat);
 	const state = ((issue.state in plugin.issue.states) ? plugin.issue.states[issue.state] : issue.state);
 	const type = ((issue.hit_label.type in plugin.issue.types) ? plugin.issue.types[issue.hit_label.type] : issue.hit_label.type);
 	const priority = ((issue.hit_label.priority in plugin.issue.priorities) ? plugin.issue.priorities[issue.hit_label.priority] : issue.hit_label.priority);

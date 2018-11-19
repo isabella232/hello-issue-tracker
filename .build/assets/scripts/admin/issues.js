@@ -20,12 +20,15 @@ import moment from "moment/moment";
 		const commentEditorID = '#hit-edit-comment-body';
 		const tinymce = window.tinymce;
 		const tinymceOptions = {
-			toolbar: 'formatselect | bold italic link image | bullist numlist',
+			toolbar: 'formatselect | bold italic link image | bullist numlist | hitimage',
 			menubar: false,
 			block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
-			plugins: 'lists autoresize link',
+			plugins: 'lists autoresize link hitimage',
 			autoresize_bottom_margin: 5,
-			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}",
+			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;} img {max-width: 99% !important;}",
+			relative_urls: false,
+			remove_script_host: false,
+			convert_urls: true
 		};
 		let changes = false;
 
@@ -159,6 +162,8 @@ import moment from "moment/moment";
 				set_main(iid);
 			});
 
+			window.location.hash = iid;
+
 			load_comments(iid).then(resp => {
 				const $commentLoader = $('.hit-comments__loader');
 				const $commentList = $('.hit-comments__list');
@@ -178,7 +183,7 @@ import moment from "moment/moment";
 					const converter = new showdown.Converter();
 					body = converter.makeHtml(body);
 					const pPrefix = converter.makeHtml(plugin.labelPrefix).replace('<p>', '').replace('</p>', '');
-					const date = moment(comment.created_at).format('MMMM Do YYYY, h:mm a');
+					const date = moment(comment.created_at).format(plugin.dateFormat);
 
 					let author = comment.author.name;
 					const regex = new RegExp(`<p>${pPrefix}author: ([^<]*)<\/p>`);

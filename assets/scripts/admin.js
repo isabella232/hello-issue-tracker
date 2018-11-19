@@ -9946,7 +9946,7 @@ var templateIssueList = exports.templateIssueList = function templateIssueList(i
 		author = issue.hit_label.author;
 	}
 
-	var date = (0, _moment2.default)(issue.created_at).format('MMMM Do YYYY, h:mm a');
+	var date = (0, _moment2.default)(issue.created_at).format(_settings.plugin.dateFormat);
 	var state = issue.state in _settings.plugin.issue.states ? _settings.plugin.issue.states[issue.state] : issue.state;
 	var type = issue.hit_label.type in _settings.plugin.issue.types ? _settings.plugin.issue.types[issue.hit_label.type] : issue.hit_label.type;
 	var priority = issue.hit_label.priority in _settings.plugin.issue.priorities ? _settings.plugin.issue.priorities[issue.hit_label.priority] : issue.hit_label.priority;
@@ -21830,7 +21830,7 @@ var templateIssueMain = exports.templateIssueMain = function templateIssueMain(i
 		author = issue.hit_label.author;
 	}
 
-	var date = (0, _moment2.default)(issue.created_at).format('MMMM Do YYYY, h:mm a');
+	var date = (0, _moment2.default)(issue.created_at).format(_settings.plugin.dateFormat);
 	var state = issue.state in _settings.plugin.issue.states ? _settings.plugin.issue.states[issue.state] : issue.state;
 	var type = issue.hit_label.type in _settings.plugin.issue.types ? _settings.plugin.issue.types[issue.hit_label.type] : issue.hit_label.type;
 	var priority = issue.hit_label.priority in _settings.plugin.issue.priorities ? _settings.plugin.issue.priorities[issue.hit_label.priority] : issue.hit_label.priority;
@@ -21917,13 +21917,12 @@ var submitForm = exports.submitForm = function submitForm($form, store) {
 		labels.push(_settings.plugin.labelPrefix + 'author: ' + _settings.plugin.user);
 	} else {
 		labels.push(store[input.iid].hit_label.author);
+		store[input.iid].labels.forEach(function (label) {
+			if (!labels.includes(label) && '' !== label) {
+				labels.push(label);
+			}
+		});
 	}
-
-	store[input.iid].labels.forEach(function (label) {
-		if (!labels.includes(label) && '' !== label) {
-			labels.push(label);
-		}
-	});
 
 	data.labels = labels.join();
 
@@ -22077,12 +22076,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 		var commentEditorID = '#hit-edit-comment-body';
 		var tinymce = window.tinymce;
 		var tinymceOptions = {
-			toolbar: 'formatselect | bold italic link image | bullist numlist',
+			toolbar: 'formatselect | bold italic link image | bullist numlist | hitimage',
 			menubar: false,
 			block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Heading 3=h3;',
-			plugins: 'lists autoresize link',
+			plugins: 'lists autoresize link hitimage',
 			autoresize_bottom_margin: 5,
-			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;}"
+			content_style: "body {margin-left: 0px; margin-right: 0px; font-size: 12px;} img {max-width: 99% !important;}",
+			relative_urls: false,
+			remove_script_host: false,
+			convert_urls: true
 		};
 		var changes = false;
 
@@ -22303,6 +22305,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 				};
 			}());
 
+			window.location.hash = iid;
+
 			(0, _api.load_comments)(iid).then(function (resp) {
 				var $commentLoader = $('.hit-comments__loader');
 				var $commentList = $('.hit-comments__list');
@@ -22329,7 +22333,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 						var converter = new showdown.Converter();
 						body = converter.makeHtml(body);
 						var pPrefix = converter.makeHtml(_settings.plugin.labelPrefix).replace('<p>', '').replace('</p>', '');
-						var date = (0, _moment2.default)(comment.created_at).format('MMMM Do YYYY, h:mm a');
+						var date = (0, _moment2.default)(comment.created_at).format(_settings.plugin.dateFormat);
 
 						var author = comment.author.name;
 						var regex = new RegExp('<p>' + pPrefix + 'author: ([^<]*)</p>');
