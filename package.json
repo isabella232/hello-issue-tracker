@@ -31,7 +31,7 @@
     },
     "author": "Nico Martin / Say Hello GmbH https://sayhello.ch",
     "license": "GPL-3.0+",
-    "homepage": "https://github.com/nico-martin/hello-issue-tracker",
+    "homepage": "https://github.com/SayHelloGmbH/hello-issue-tracker",
     "scripts": {
         "start": "gulp"
     },
@@ -40,6 +40,6 @@
             "env"
         ]
     },
-    "version": "0.1.7",
+    "version": "0.1.8",
     "main": "gulpfile.babel.js"
 }

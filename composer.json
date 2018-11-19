@@ -5,8 +5,8 @@
         "wordpress",
         "plugin"
     ],
-    "version": "0.1.7",
-    "homepage": "https://github.com/nico-martin/hello-issue-tracker",
+    "version": "0.1.8",
+    "homepage": "https://github.com/SayHelloGmbH/hello-issue-tracker",
     "license": "GPL-3.0+",
     "authors": [
         {
