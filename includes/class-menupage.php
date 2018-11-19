@@ -5,7 +5,7 @@ namespace HelloIssueTracker;
 class MenuPage {
 
 	public static function title() {
-		return __( 'Issue Tracker', 'hit' );
+		return __( 'Issue Tracker (Beta)', 'hit' );
 	}
 
 	public static function add_menu_item() {

@@ -269,6 +269,8 @@
     position: relative; }
     .hello-issue-tracker .hit-comments__list li + li, .hello-issue-tracker .hit-comments__form + li {
       margin-top: 1.6rem; }
+    .hello-issue-tracker .hit-comments__list li.active-user, .hello-issue-tracker .hit-comments__form.active-user {
+      border-left: 3px solid #1aaa55; }
     .hello-issue-tracker .hit-comments__list li:before, .hello-issue-tracker .hit-comments__form:before {
       content: '';
       position: absolute;
@@ -334,8 +336,6 @@
     font-size: 1.2rem;
     line-height: 1;
     font-weight: 600; }
-  .hello-issue-tracker .hit-issue-list__id {
-    text-align: center; }
   .hello-issue-tracker .hit-issue-list__created {
     margin-top: 0.4rem;
     display: block;
@@ -349,9 +349,12 @@
     .hello-issue-tracker .hit-issue-list__labels:empty {
       display: none; }
   .hello-issue-tracker .hit-issue-list__id {
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
     color: rgba(0, 0, 0, 0.1);
     font-weight: 900;
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     transition: all 200ms;
     vertical-align: middle !important; }
   .hello-issue-tracker .hit-issue-list:hover {
@@ -369,7 +372,8 @@
   line-height: 1;
   padding: .6em 1em;
   border-radius: 3px;
-  font-size: .7rem; }
+  font-size: .7rem;
+  white-space: nowrap; }
   .hello-issue-tracker .hit-issue-label:empty {
     display: none; }
   .hello-issue-tracker .hit-issue-label--small {

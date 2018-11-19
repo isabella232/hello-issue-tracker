@@ -22343,7 +22343,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 							body = body.replace(regexExec[0], '');
 						}
 
-						$commentList.append('<li>\n\t\t\t\t\t\t' + body + '\n\t\t\t\t\t\t<span class="hit-comments__comment-meta"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t\t</li>');
+						$commentList.append('<li class="' + (author === _settings.plugin.user ? 'active-user' : '') + '">\n\t\t\t\t\t\t' + body + '\n\t\t\t\t\t\t<span class="hit-comments__comment-meta"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t\t</li>');
 					}
 				} catch (err) {
 					_didIteratorError = true;
