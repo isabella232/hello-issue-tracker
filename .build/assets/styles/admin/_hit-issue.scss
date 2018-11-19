@@ -180,6 +180,7 @@
 
 		&__description {
 			padding-bottom: $padding*2;
+			margin-top: $padding;
 			//border-bottom: 1px solid #ccc;
 			* + * {
 				margin-top: 1em !important;

@@ -291,7 +291,7 @@
     border-top: 1px solid #ccc;
     font-size: 10px;
     line-height: 1.4;
-    color: #727272;
+    color: #818181;
     text-align: right; }
 
 .hello-issue-tracker .hit-issue-list {
@@ -417,7 +417,8 @@
     line-height: 1.2;
     margin: 0 0 0.8rem 0; }
   .hello-issue-tracker .hit-issue__description {
-    padding-bottom: 1.6rem; }
+    padding-bottom: 1.6rem;
+    margin-top: 0.8rem; }
     .hello-issue-tracker .hit-issue__description * + * {
       margin-top: 1em !important; }
   .hello-issue-tracker .hit-issue__comments {
