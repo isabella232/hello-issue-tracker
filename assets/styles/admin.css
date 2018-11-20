@@ -279,8 +279,6 @@
     position: relative; }
     .hello-issue-tracker .hit-comments__list .hit-comments__comment-item + .hit-comments__comment-item, .hello-issue-tracker .hit-comments__form + .hit-comments__comment-item {
       margin-top: 1.6rem; }
-    .hello-issue-tracker .hit-comments__list .hit-comments__comment-item.active-user, .hello-issue-tracker .hit-comments__form.active-user {
-      border-left: 3px solid #1aaa55; }
     .hello-issue-tracker .hit-comments__list .hit-comments__comment-item:before, .hello-issue-tracker .hit-comments__form:before {
       content: '';
       position: absolute;
@@ -291,6 +289,10 @@
       width: 10px;
       height: 10px;
       transform: translateX(-50%); }
+    .hello-issue-tracker .hit-comments__list .hit-comments__comment-item.active-user, .hello-issue-tracker .hit-comments__form.active-user {
+      border-left: 3px solid #1aaa55; }
+      .hello-issue-tracker .hit-comments__list .hit-comments__comment-item.active-user:before, .hello-issue-tracker .hit-comments__form.active-user:before {
+        left: calc(-1.6rem - 3px); }
   .hello-issue-tracker .hit-comments__list {
     margin: 0; }
   .hello-issue-tracker .hit-comments__form {

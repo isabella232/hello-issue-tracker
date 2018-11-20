@@ -13,9 +13,6 @@
 			padding: $padding;
 			background-color: #fff;
 			border: 1px solid #e5e5e5;
-			&.active-user {
-				border-left: 3px solid c(green);
-			}
 			box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 			position: relative;
 			&:before {
@@ -28,6 +25,12 @@
 				width: 10px;
 				height: 10px;
 				transform: translateX(-50%);
+			}
+			&.active-user {
+				border-left: 3px solid c(green);
+				&:before {
+					left: calc(-#{$padding*2} - 3px);
+				}
 			}
 		}
 
