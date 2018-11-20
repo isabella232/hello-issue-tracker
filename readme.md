@@ -2,6 +2,8 @@ Hello Issue Tracker
 ======================
 **A WordPress plugin that connects your admin interface with your GitLab Issue System**
 
+![Screenshot](assets/img/screenshot.png)
+
 If you manage your or your clients WordPress website over GitLab you already have a very powerful ticketing system. But it's quite hard to use for non developers. That's why "Hello Issue Tracker" closes the gap!
 
 "Hello Issue Tracker" provides an interface, where any WordPress admin can create, read, edit and comment GitLab issues! Awesome, right?  
