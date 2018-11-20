@@ -270,18 +270,18 @@
   border-left: 1px solid #ccc;
   margin-left: 0.8rem;
   padding-left: 1.6rem; }
-  .hello-issue-tracker .hit-comments__list li, .hello-issue-tracker .hit-comments__form {
+  .hello-issue-tracker .hit-comments__list .hit-comments__comment-item, .hello-issue-tracker .hit-comments__form {
     font-size: 14px;
     padding: 0.8rem;
     background-color: #fff;
     border: 1px solid #e5e5e5;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
     position: relative; }
-    .hello-issue-tracker .hit-comments__list li + li, .hello-issue-tracker .hit-comments__form + li {
+    .hello-issue-tracker .hit-comments__list .hit-comments__comment-item + .hit-comments__comment-item, .hello-issue-tracker .hit-comments__form + .hit-comments__comment-item {
       margin-top: 1.6rem; }
-    .hello-issue-tracker .hit-comments__list li.active-user, .hello-issue-tracker .hit-comments__form.active-user {
+    .hello-issue-tracker .hit-comments__list .hit-comments__comment-item.active-user, .hello-issue-tracker .hit-comments__form.active-user {
       border-left: 3px solid #1aaa55; }
-    .hello-issue-tracker .hit-comments__list li:before, .hello-issue-tracker .hit-comments__form:before {
+    .hello-issue-tracker .hit-comments__list .hit-comments__comment-item:before, .hello-issue-tracker .hit-comments__form:before {
       content: '';
       position: absolute;
       left: calc(-1.6rem - 1px);
@@ -432,15 +432,9 @@
   .hello-issue-tracker .hit-issue__description {
     padding-bottom: 1.6rem;
     margin-top: 0.8rem; }
-    .hello-issue-tracker .hit-issue__description img {
-      max-width: 100% !important; }
-    .hello-issue-tracker .hit-issue__description * + * {
-      margin-top: 1em !important; }
   .hello-issue-tracker .hit-issue__comments {
     min-height: 100px;
     position: relative; }
-    .hello-issue-tracker .hit-issue__comments img {
-      max-width: 100% !important; }
 
 .hello-issue-tracker .button--close {
   background-color: #1aaa55;
@@ -450,3 +444,28 @@
   .hello-issue-tracker .button--close:hover {
     background-color: #1cb75c;
     color: #fff; }
+
+.hello-issue-tracker .hit-comments__comment-item img,
+.hello-issue-tracker .hit-issue__description img {
+  max-width: 100% !important; }
+
+.hello-issue-tracker .hit-comments__comment-item ul li,
+.hello-issue-tracker .hit-issue__description ul li {
+  list-style: disc; }
+
+.hello-issue-tracker .hit-comments__comment-item ul, .hello-issue-tracker .hit-comments__comment-item ol,
+.hello-issue-tracker .hit-issue__description ul,
+.hello-issue-tracker .hit-issue__description ol {
+  margin-left: 2em; }
+  .hello-issue-tracker .hit-comments__comment-item ul li, .hello-issue-tracker .hit-comments__comment-item ol li,
+  .hello-issue-tracker .hit-issue__description ul li,
+  .hello-issue-tracker .hit-issue__description ol li {
+    margin-bottom: 0; }
+    .hello-issue-tracker .hit-comments__comment-item ul li + li, .hello-issue-tracker .hit-comments__comment-item ol li + li,
+    .hello-issue-tracker .hit-issue__description ul li + li,
+    .hello-issue-tracker .hit-issue__description ol li + li {
+      margin-top: .4em; }
+
+.hello-issue-tracker .hit-comments__comment-item > * + *,
+.hello-issue-tracker .hit-issue__description > * + * {
+  margin-top: 1em !important; }

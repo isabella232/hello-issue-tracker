@@ -22860,7 +22860,7 @@ var templateIssueForm = exports.templateIssueForm = function templateIssueForm()
 	var converter = new showdown.Converter();
 	description = converter.makeHtml(description);
 
-	return '<form class="hit-edit js-hit-edit-form">\n\t\t\t<input type="hidden" name="iid" value="' + (issue.iid || 'new') + '" />\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-title" class="hit-edit__label">Title</label>\n\t\t\t\t<input id="hit-edit-title" class="hit-edit__input" name="title" value="' + (issue.title || 'New issue') + '" type="text">\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<textarea id="hit-edit-description" class="hit-edit__textarea" name="description">' + description + '</textarea>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-priority" class="hit-edit__label">Priority</label>\n\t\t\t\t<select id="hit-edit-priority" class="hit-edit__input" name="priority">\n\t\t\t\t\t' + (0, _keys2.default)(_settings.plugin.issue.priorities).map(function (key) {
+	return '<form class="hit-edit js-hit-edit-form">\n\t\t\t<input type="hidden" name="iid" value="' + (issue.iid || 'new') + '" />\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-title" class="hit-edit__label">Title</label>\n\t\t\t\t<input id="hit-edit-title" class="hit-edit__input" name="title" placeholder="New Issue" value="' + (issue.title || '') + '" type="text">\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<textarea id="hit-edit-description" class="hit-edit__textarea" name="description">' + description + '</textarea>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-priority" class="hit-edit__label">Priority</label>\n\t\t\t\t<select id="hit-edit-priority" class="hit-edit__input" name="priority">\n\t\t\t\t\t' + (0, _keys2.default)(_settings.plugin.issue.priorities).map(function (key) {
 		return '<option ' + (issue && issue.hit_label.priority === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.priorities[key] + '</option>';
 	}) + '\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t\t<div class="hit-edit__element">\n\t\t\t\t<label for="hit-edit-type" class="hit-edit__label">Type</label>\n\t\t\t\t<select id="hit-edit-type" class="hit-edit__input" name="type">\n\t\t\t\t\t' + (0, _keys2.default)(_settings.plugin.issue.types).map(function (key) {
 		return '<option ' + (issue && issue.hit_label.type === key ? 'selected' : '') + ' value="' + key + '">' + _settings.plugin.issue.types[key] + '</option>';
@@ -22882,7 +22882,7 @@ var submitForm = exports.submitForm = function submitForm($form, store) {
 	if (input.iid === 'new') {
 		labels.push(_settings.plugin.labelPrefix + 'author: ' + _settings.plugin.user);
 	} else {
-		labels.push(store[input.iid].hit_label.author);
+		labels.push(_settings.plugin.labelPrefix + 'author: ' + store[input.iid].hit_label.author);
 		store[input.iid].labels.forEach(function (label) {
 			if (!labels.includes(label) && '' !== label) {
 				labels.push(label);
@@ -23328,7 +23328,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 							body = body.replace(regexExec[0], '');
 						}
 
-						$commentList.append('<li class="' + (author === _settings.plugin.user ? 'active-user' : '') + '">\n\t\t\t\t\t\t' + body + '\n\t\t\t\t\t\t<span class="hit-comments__comment-meta"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t\t</li>');
+						$commentList.append('<li class="hit-comments__comment-item ' + (author === _settings.plugin.user ? 'active-user' : '') + '">\n\t\t\t\t\t\t' + body + '\n\t\t\t\t\t\t<span class="hit-comments__comment-meta"><b>' + author + '</b> / ' + date + '</span>\n\t\t\t\t\t</li>');
 					}
 				} catch (err) {
 					_didIteratorError = true;

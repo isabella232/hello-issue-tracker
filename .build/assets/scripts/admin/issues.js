@@ -196,7 +196,7 @@ import moment from "moment/moment";
 						body = body.replace(regexExec[0], '');
 					}
 
-					$commentList.append(`<li class="${(author === plugin.user ? 'active-user' : '')}">
+					$commentList.append(`<li class="hit-comments__comment-item ${(author === plugin.user ? 'active-user' : '')}">
 						${body}
 						<span class="hit-comments__comment-meta"><b>${author}</b> / ${date}</span>
 					</li>`);

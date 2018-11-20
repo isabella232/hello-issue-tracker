@@ -13,7 +13,7 @@ export const templateIssueForm = function (issue = false) {
 			<input type="hidden" name="iid" value="${issue.iid || 'new'}" />
 			<div class="hit-edit__element">
 				<label for="hit-edit-title" class="hit-edit__label">Title</label>
-				<input id="hit-edit-title" class="hit-edit__input" name="title" value="${issue.title || 'New issue'}" type="text">
+				<input id="hit-edit-title" class="hit-edit__input" name="title" placeholder="New Issue" value="${issue.title || ''}" type="text">
 			</div>
 			<div class="hit-edit__element">
 				<textarea id="hit-edit-description" class="hit-edit__textarea" name="description">${description}</textarea>
@@ -52,7 +52,7 @@ export const submitForm = function ($form, store) {
 	if (input.iid === 'new') {
 		labels.push(`${plugin.labelPrefix}author: ${plugin.user}`);
 	} else {
-		labels.push(store[input.iid].hit_label.author);
+		labels.push(`${plugin.labelPrefix}author: ${store[input.iid].hit_label.author}`);
 		store[input.iid].labels.forEach((label) => {
 			if (!labels.includes(label) && '' !== label) {
 				labels.push(label);
