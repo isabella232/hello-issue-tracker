@@ -38,6 +38,9 @@ export const templateIssueMain = function (issue) {
 				<form action="" class="hit-comments__form hit-edit js-hit-new-comment-form">
 					<input type="hidden" name="iid" value="${issue.iid || 'new'}" />
 					<div class="hit-edit__element">
+						<p><b>Add new comment</b></p>
+					</div>
+					<div class="hit-edit__element">
 						<textarea id="hit-edit-comment-body" class="hit-edit__textarea" name="body"></textarea>
 					</div>
 					<div class="hit-edit__element hit-edit__element--controls">
