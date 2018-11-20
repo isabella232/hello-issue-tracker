@@ -253,8 +253,18 @@
     border-bottom: 1px solid #ccc; }
     .hit-edit .mce-tinymce .mce-top-part {
       border: 1px solid #ccc; }
+      .hit-edit .mce-tinymce .mce-top-part:before {
+        display: none;
+        box-shadow: none; }
     .hit-edit .mce-tinymce .mce-statusbar {
       display: none; }
+    .hit-edit .mce-tinymce .mce-toolbar-grp {
+      background-color: transparent;
+      border: none !important; }
+    .hit-edit .mce-tinymce .mce-btn-group:not(:first-child) {
+      border-left-color: #ccc;
+      margin-left: 10px;
+      padding-left: 10px; }
 
 .hello-issue-tracker .hit-comments {
   border-left: 1px solid #ccc;

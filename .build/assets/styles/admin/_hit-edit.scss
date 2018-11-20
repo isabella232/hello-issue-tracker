@@ -30,9 +30,22 @@
 
 		.mce-top-part {
 			border: 1px solid #ccc;
+			&:before {
+				display: none;
+				box-shadow: none;
+			}
 		}
 		.mce-statusbar {
 			display: none;
+		}
+		.mce-toolbar-grp {
+			background-color: transparent;
+			border: none !important;
+		}
+		.mce-btn-group:not(:first-child) {
+			border-left-color: #ccc;
+			margin-left: 10px;
+			padding-left: 10px;
 		}
 	}
 
