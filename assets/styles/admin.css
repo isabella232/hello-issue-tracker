@@ -302,8 +302,7 @@
     border-top: 1px solid #ccc;
     font-size: 10px;
     line-height: 1.4;
-    color: #818181;
-    text-align: right; }
+    color: #818181; }
 
 .hello-issue-tracker .hit-issue-list {
   display: flex;

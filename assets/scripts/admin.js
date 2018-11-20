@@ -10448,7 +10448,10 @@ var load_comments = exports.load_comments = function load_comments(iid) {
 	if (!_settings.plugin.repo) {
 		return false;
 	}
-	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid + '/notes');
+
+	return do_api('projects/' + _settings.plugin.repo + '/issues/' + iid + '/notes', {
+		'sort': 'asc'
+	});
 };
 
 var create_comment = exports.create_comment = function create_comment(iid, data) {

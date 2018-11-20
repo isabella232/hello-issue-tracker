@@ -62,7 +62,11 @@ export const load_comments = function (iid) {
 	if (!plugin.repo) {
 		return false;
 	}
-	return do_api(`projects/${plugin.repo}/issues/${iid}/notes`);
+
+
+	return do_api(`projects/${plugin.repo}/issues/${iid}/notes`, {
+		'sort': 'asc'
+	});
 };
 
 export const create_comment = function (iid, data) {
