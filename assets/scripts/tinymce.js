@@ -36,12 +36,32 @@
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -59,58 +79,22 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./.build/assets/scripts/tinymce/hitimage.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/******/ ({
 
-"use strict";
+/***/ "./.build/assets/scripts/tinymce/hitimage.js":
+/*!***************************************************!*\
+  !*** ./.build/assets/scripts/tinymce/hitimage.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-
-(function ($) {
-
-	var frame = void 0;
-	var vars = window.HelloIssueTrackerTinyMCEVars.hitimage;
-
-	tinymce.create('tinymce.plugins.hitimage', {
-		init: function init(ed, url) {
-			//spacer
-			ed.addButton('hitimage', {
-				title: vars.texts.title,
-				image: vars.image,
-				onclick: function onclick() {
-					frame = wp.media({
-						title: vars.texts.selectOrUpload,
-						button: {
-							text: vars.texts.select
-						},
-						multiple: false
-					});
-
-					frame.on('select', function () {
-						var img = frame.state().get('selection').first().toJSON();
-						var imgUrl = img.url;
-						if ('large' in img.sizes) {
-							console.log('large');
-							imgUrl = img.sizes.large.url;
-						}
-						ed.selection.setContent('<img alt="' + img.name + '" src="' + imgUrl + '" />');
-					});
-
-					frame.open();
-				}
-			});
-		},
-		createControl: function createControl(n, cm) {
-			return null;
-		}
-	});
-
-	tinymce.PluginManager.add('hitimage', tinymce.plugins.hitimage);
-})(jQuery);
+eval("(function ($) {\n  var frame;\n  var vars = window.HelloIssueTrackerTinyMCEVars.hitimage;\n  tinymce.create('tinymce.plugins.hitimage', {\n    init: function init(ed, url) {\n      //spacer\n      ed.addButton('hitimage', {\n        title: vars.texts.title,\n        image: vars.image,\n        onclick: function onclick() {\n          frame = wp.media({\n            title: vars.texts.selectOrUpload,\n            button: {\n              text: vars.texts.select\n            },\n            multiple: false\n          });\n          frame.on('select', function () {\n            var img = frame.state().get('selection').first().toJSON();\n            var imgUrl = img.url;\n\n            if ('large' in img.sizes) {\n              console.log('large');\n              imgUrl = img.sizes.large.url;\n            }\n\n            ed.selection.setContent(\"<img alt=\\\"\".concat(img.name, \"\\\" src=\\\"\").concat(imgUrl, \"\\\" />\"));\n          });\n          frame.open();\n        }\n      });\n    },\n    createControl: function createControl(n, cm) {\n      return null;\n    }\n  });\n  tinymce.PluginManager.add('hitimage', tinymce.plugins.hitimage);\n})(jQuery);\n\n//# sourceURL=webpack:///./.build/assets/scripts/tinymce/hitimage.js?");
 
 /***/ })
-/******/ ]);
+
+/******/ });

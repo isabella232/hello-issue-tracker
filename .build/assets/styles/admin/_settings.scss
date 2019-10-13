@@ -1,0 +1,143 @@
+$prefix: helloissuetracker;
+$color_main: #77adbf;
+
+.#{$prefix}-wrap {
+
+	line-height: 1.4;
+	font-size: 13px;
+
+	.form-table td {
+		vertical-align: top;
+	}
+	h1 {
+		margin-bottom: 20px;
+	}
+
+	a {
+		color: darken($color_main, 5%);
+		&:hover {
+			color: $color_main;
+		}
+		text-decoration: none;
+	}
+
+	form {
+		margin-top: 20px;
+		textarea {
+			width: 100%;
+		}
+		textarea, input[type="text"], select {
+			width: 100%;
+			margin-bottom: .4em;
+		}
+	}
+
+	small {
+		line-height: 1.6em;
+		code {
+			font-size: .7rem;
+		}
+	}
+
+	.beta p {
+		font-size: smaller;
+	}
+
+	p.error {
+		font-weight: bold;
+		color: red;
+	}
+
+	.settings-sub {
+		margin-top: 20px;
+		max-width: 430px;
+		width: 100%;
+	}
+
+	.button--#{$prefix}-settings-delete {
+		background-color: transparent;
+		border: none;
+		box-shadow: none;
+		color: #a00;
+		padding: 0;
+		&:hover {
+			color: #dc3232;
+		}
+		&:active {
+			background-color: transparent;
+			border-color: none;
+			box-shadow: none;
+		}
+	}
+
+	.form-table {
+		margin-top: 0;
+		tr {
+			position: relative;
+			//display: block;
+		}
+	}
+
+	.#{$prefix}-settings--spacer {
+		border-top: 1px solid #e5e5e5;
+		margin-left: -220px;
+	}
+
+	&__section {
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+		background: #fff;
+		//padding: 0 15px 15px 15px;
+		margin-top: 30px;
+		max-width: 850px;
+		width: 100%;
+
+		h2 {
+			font-size: 14px;
+			padding: 8px 15px;
+			line-height: 1.4;
+			border-bottom: 1px solid #eee;
+			margin: 0;
+		}
+		.form-table {
+			td, th {
+				padding: 20px 15px;
+				line-height: 1.4;
+				font-size: 13px;
+			}
+			th {
+				padding-right: 0;
+			}
+			tr {
+				td, th {
+					border-bottom: 1px solid #eee;
+				}
+				&:last-child {
+					td, th {
+						border-bottom: none;
+					}
+				}
+			}
+
+			@media (max-width: 782px) {
+				td, th {
+					padding: 10px 15px;
+				}
+				th {
+					padding-bottom: 0;
+					border-bottom: none !important;
+				}
+			}
+		}
+	}
+
+	&__section-description:not(:empty) {
+		padding: 15px;
+	}
+
+	.#{$prefix}__field-description {
+		font-size: 13px;
+		font-style: italic;
+		color: #666;
+	}
+}

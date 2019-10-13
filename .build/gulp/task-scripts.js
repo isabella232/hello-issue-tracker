@@ -1,47 +1,77 @@
+import gulp from 'gulp';
+
 import webpack from 'webpack';
 import gulpWebpack from 'webpack-stream';
+import livereload from 'gulp-livereload';
+import VueLoaderPlugin from 'vue-loader/lib/plugin';
+import rename from 'gulp-rename';
+import uglify from 'gulp-uglify';
+import fs from "fs";
+
 import babelloader from 'babel-loader';
 
-module.exports = function (key, config, gulp, $, errorLog) {
-	return function () {
-		gulp.src([
-			`${config.build + key}/**/*.js`,
-			`!${config.build + key}/modules/*.js`
-		])
-			//.pipe($.debug({title: 'scripts:'}))
+function getDirectories(path) {
+	return fs.readdirSync(path).filter(function (file) {
+		if (file.indexOf('_') !== 0) {
+			return fs.statSync(path + '/' + file).isDirectory();
+		}
+	});
+}
 
+export const task = config => {
+	return new Promise(resolve => {
+		const bundles = getDirectories(`${config.assetsBuild}scripts/`);
+		let loaded = 0;
+		bundles.forEach(bundle => {
+			gulp.src([
+				`${config.assetsBuild}scripts/${bundle}/*.js`
+			])
 			// Webpack
-			.pipe(
-				gulpWebpack({
-					module: {
-						rules: [
-							{
-								test: /\.js$/,
-								exclude: /node_modules/,
-								loader: "babel-loader"
-							}
-						]
-					},
-					output: {
-						filename: `${key}.js`
-					},
-					externals: {
-						"jquery": "jQuery"
-					}
-				}, webpack)
-			)
-			.on('error', errorLog)
-			.pipe(gulp.dest(config.base))
+				.pipe(
+					gulpWebpack({
+						mode: 'development',
+						module: {
+							rules: [
+								{
+									test: /\.(js|jsx)$/,
+									exclude: /node_modules/,
+									use: ['babel-loader']
+								}
+							]
+						},
+						resolve: {
+							extensions: ['*', '.js', '.jsx']
+						},
+						optimization: {
+							minimize: false
+						},
+						output: {
+							filename: `${bundle}.js`
+						},
+						externals: {
+							"jquery": "jQuery",
+							"React": "React",
+							"ReactDOM": "ReactDOM"
+						}
+					}, webpack)
+				)
+				.on('error', config.errorLog)
+				.pipe(gulp.dest(config.assetsDir + 'scripts/'))
 
-			// Minify
-			.pipe($.uglify())
-			.pipe($.rename({
-				suffix: '.min'
-			}))
-			.on('error', errorLog)
-			.pipe(gulp.dest(config.base))
+				// Minify
+				.pipe(uglify())
+				.pipe(rename({
+					suffix: '.min'
+				}))
+				.on('error', config.errorLog)
+				.pipe(gulp.dest(config.assetsDir + 'scripts/'))
 
-			//reload
-			.pipe($.livereload());
-	};
+				//reload
+				.pipe(livereload());
+			loaded++;
+			if (loaded === bundles.length) {
+				resolve();
+			}
+		});
+	});
 };
