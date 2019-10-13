@@ -90,10 +90,11 @@
 /*!************************************************!*\
   !*** ./.build/assets/scripts/admin/issues.jsx ***!
   \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-eval("var title = 'React works';\nvar $container = document.querySelector('#hello-issue-tracker');\n\nif ($container) {\n  ReactDOM.render(React.createElement(\"div\", null, title), $container);\n}\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/issues.jsx?");
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _vendor_plugin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vendor/plugin */ \"./.build/assets/scripts/admin/vendor/plugin.js\");\n\nvar $container = document.querySelector('#hello-issue-tracker');\n\nif ($container) {\n  ReactDOM.render(React.createElement(\"div\", null, \"React works\"), $container);\n}\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/issues.jsx?");
 
 /***/ }),
 
@@ -105,7 +106,31 @@ eval("var title = 'React works';\nvar $container = document.querySelector('#hell
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _issues_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./issues.jsx */ \"./.build/assets/scripts/admin/issues.jsx\");\n/* harmony import */ var _issues_jsx__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_issues_jsx__WEBPACK_IMPORTED_MODULE_0__);\n\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _issues_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./issues.jsx */ \"./.build/assets/scripts/admin/issues.jsx\");\n\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/main.js?");
+
+/***/ }),
+
+/***/ "./.build/assets/scripts/admin/vendor/helpers.js":
+/*!*******************************************************!*\
+  !*** ./.build/assets/scripts/admin/vendor/helpers.js ***!
+  \*******************************************************/
+/*! exports provided: snakeToCamel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"snakeToCamel\", function() { return snakeToCamel; });\n/* harmony import */ var _plugin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./plugin */ \"./.build/assets/scripts/admin/vendor/plugin.js\");\n\nfunction snakeToCamel(s) {\n  return s.replace(/(\\-\\w)/g, function (m) {\n    return m[1].toUpperCase();\n  });\n}\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/vendor/helpers.js?");
+
+/***/ }),
+
+/***/ "./.build/assets/scripts/admin/vendor/plugin.js":
+/*!******************************************************!*\
+  !*** ./.build/assets/scripts/admin/vendor/plugin.js ***!
+  \******************************************************/
+/*! exports provided: config, strings */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"config\", function() { return config; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"strings\", function() { return strings; });\n/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ \"./.build/assets/scripts/admin/vendor/helpers.js\");\n\nvar pluginConfig = {};\nvar pluginStrings = {};\n\nif ('HelloIssueTrackerConfig' in window) {\n  Object.keys(window.HelloIssueTrackerConfig).forEach(function (key) {\n    if (key === 'strings') {\n      pluginStrings = window.HelloIssueTrackerConfig[key];\n    } else {\n      pluginConfig[Object(_helpers__WEBPACK_IMPORTED_MODULE_0__[\"snakeToCamel\"])(key)] = window.HelloIssueTrackerConfig[key];\n    }\n  });\n}\n\nvar config = pluginConfig;\nvar strings = pluginStrings;\n\n//# sourceURL=webpack:///./.build/assets/scripts/admin/vendor/plugin.js?");
 
 /***/ })
 

@@ -22,7 +22,10 @@ class SettingsPage
 
 	public function addReposToConfig($vars)
 	{
-		$vars[''] = [];
+		$vars['gitlab'] = [
+			'repoUrl'      => helloissuetracker()->settings->get('repo-url'),
+			'privateToken' => helloissuetracker()->settings->get('private-token'),
+		];
 
 		return $vars;
 	}

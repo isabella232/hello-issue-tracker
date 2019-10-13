@@ -1,9 +1,10 @@
-const title = 'React works';
+import {config} from './vendor/plugin';
+
 const $container = document.querySelector('#hello-issue-tracker');
 
 if ($container) {
 	ReactDOM.render(
-		<div>{title}</div>,
+		<div>React works</div>,
 		$container
 	);
 }
