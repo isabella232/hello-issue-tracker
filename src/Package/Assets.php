@@ -9,6 +9,7 @@ class Assets
 	{
 		add_action('admin_enqueue_scripts', [$this, 'addAdminAssets']);
 		add_filter(helloissuetracker()->prefix . '_admin_js_strings', [$this, 'strings']);
+		add_filter(helloissuetracker()->prefix . '_admin_js_config', [$this, 'addIssueAttributes']);
 	}
 
 	public function addAdminAssets()
@@ -45,5 +46,31 @@ class Assets
 	public function strings($strings)
 	{
 		return $strings;
+	}
+
+	public function addIssueAttributes($vars)
+	{
+		$vars['issue-attributes'] = self::issueAttributes();
+
+		return $vars;
+	}
+
+	public static function issueAttributes()
+	{
+		return [
+			'states'     => [
+				'opened' => __('Open', 'hello-issue-tracker'),
+				'closed' => __('Closed', 'hello-issue-tracker'),
+			],
+			'priorities' => apply_filters('SayHello\IssueTracker\Priorities', [
+				'low'    => __('Low', 'hello-issue-tracker'),
+				'normal' => __('Normal', 'hello-issue-tracker'),
+				'high'   => __('High', 'hello-issue-tracker'),
+			]),
+			'types'      => apply_filters('SayHello\IssueTracker\Types', [
+				'bug'     => __('Bug', 'hello-issue-tracker'),
+				'feature' => __('Feature', 'hello-issue-tracker'),
+			]),
+		];
 	}
 }

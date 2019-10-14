@@ -49,7 +49,6 @@ export const task = config => {
 							filename: `${bundle}.js`
 						},
 						externals: {
-							"jquery": "jQuery",
 							"React": "React",
 							"ReactDOM": "ReactDOM"
 						}

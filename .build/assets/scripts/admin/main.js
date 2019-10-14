@@ -1,1 +1,1 @@
-import './issues.jsx';
+import './main.jsx';

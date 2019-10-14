@@ -1,0 +1,16 @@
+.hit-page {
+	margin-top: 30px;
+	display: flex;
+	position: relative;
+	align-items: flex-start;
+
+	&__side {
+		width: 600px;
+		position: sticky;
+		top: $page-top;
+	}
+
+	&__main {
+		width: calc(100% - 600px);
+	}
+}

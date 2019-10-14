@@ -11,11 +11,12 @@ class SettingsPage
 	{
 		add_action('shstaging_settings', [$this, 'settings']);
 		add_filter(helloissuetracker()->prefix . '_admin_js_config', [$this, 'addReposToConfig']);
+		add_filter(helloissuetracker()->prefix . '_admin_js_strings', [$this, 'addTranslations']);
 	}
 
 	public function settings()
 	{
-		$section = helloissuetracker()->settings->addSection($this->getSettingsPage(), 'hello-issue-tracker-section', __('Einstellungen', 'hello-issue-tracker'));
+		$section = helloissuetracker()->settings->addSection($this->getSettingsPage(), 'hello-issue-tracker-section', __('Settings', 'hello-issue-tracker'));
 		helloissuetracker()->settings->addInput($section, 'repo-url', __('Repository URL', 'hello-issue-tracker'));
 		helloissuetracker()->settings->addInput($section, 'private-token', __('Gitlab Private Token', 'hello-issue-tracker'));
 	}
@@ -29,6 +30,19 @@ class SettingsPage
 
 		return $vars;
 	}
+
+	public function addTranslations($strings)
+	{
+		$strings['repo-url-not-set'] = __('Repository URL not yet set', 'hello-issue-tracker');
+		$strings['state']            = __('Status', 'hello-issue-tracker');
+		$strings['create-issue']     = __('Create Issue', 'hello-issue-tracker');
+
+		return $strings;
+	}
+
+	/**
+	 * Helpers
+	 */
 
 	private function getSettingsPage()
 	{
