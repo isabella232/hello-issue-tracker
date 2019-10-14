@@ -7,6 +7,7 @@ class IssuesList extends React.Component {
 			states: config.issueAttributes.states,
 			activeState: Object.keys(config.issueAttributes.states)[1]
 		};
+		this.changeIssueStates = this.changeIssueStates.bind(this);
 	}
 
 	changeIssueStates(event) {
