@@ -49,8 +49,8 @@ export const task = config => {
 							filename: `${bundle}.js`
 						},
 						externals: {
-							"React": "React",
-							"ReactDOM": "ReactDOM"
+							"react": "React",
+							"react-dom": "ReactDOM"
 						}
 					}, webpack)
 				)

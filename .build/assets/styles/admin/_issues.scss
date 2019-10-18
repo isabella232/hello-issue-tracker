@@ -1,0 +1,60 @@
+.hit-issues {
+	background-color: #fff;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+	min-height: 400px;
+
+	&__header {
+		border-bottom: 1px solid #e5e5e5;
+		display: flex;
+		padding: var(--hit-padding);
+		align-items: center;
+	}
+
+	&__add-issue {
+		margin-left: auto !important;
+	}
+
+	&__form {
+		display: flex;
+	}
+
+	&__options {
+		display: flex;
+	}
+
+	&__option {
+		display: flex;
+		align-items: center;
+
+		+ .hit-issues__option {
+			margin-left: var(--hit-padding);
+		}
+
+		label {
+			margin-right: var(--hit-padding-small);
+		}
+
+		select {
+			border-radius: 3px;
+			padding: var(--hit-padding-small);
+			height: inherit;
+		}
+	}
+
+	&__head {
+		width: 100%;
+		border-spacing: 0;
+		border-bottom: 1px solid #e5e5e5;
+		background-color: var(--color-gray);
+
+		.hit-issue-list__item:first-child {
+			text-align: center;
+		}
+	}
+
+	&__list {
+		max-height: calc(100vh - 300px);
+		overflow: auto;
+	}
+}

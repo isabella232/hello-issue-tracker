@@ -1,7 +1,7 @@
-import {config} from './plugin';
+// @flow
 
-export function snakeToCamel(s) {
-	return s.replace(/(\-\w)/g, function (m) {
-		return m[1].toUpperCase();
-	});
+export function snakeToCamel(s: string) {
+    return s.replace(/(\-\w)/g, function (m) {
+        return m[1].toUpperCase();
+    });
 }

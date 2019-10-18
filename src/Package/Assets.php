@@ -24,7 +24,7 @@ class Assets
 		wp_enqueue_style($pluginPrefix . '-admin-style', $dirUri . 'assets/styles/admin' . ($min ? '.min' : '') . '.css', [], $scriptVersion);
 		wp_enqueue_script('React', $dirUri . 'assets/scripts/react.production.min.js', [], '16.10.2', true);
 		wp_enqueue_script('ReactDOM', $dirUri . 'assets/scripts/react-dom.production.min.js', [], '16.10.2', true);
-		wp_enqueue_script($pluginPrefix . '-admin-script', $dirUri . 'assets/scripts/admin' . ($min ? '.min' : '') . '.js', ['jquery', 'vueJS'], $scriptVersion, true);
+		wp_enqueue_script($pluginPrefix . '-admin-script', $dirUri . 'assets/scripts/admin' . ($min ? '.min' : '') . '.js', ['jquery', 'React', 'ReactDOM'], $scriptVersion, true);
 
 		/**
 		 * JS Vars

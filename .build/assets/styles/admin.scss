@@ -1,10 +1,7 @@
 @charset "UTF-8";
-@import "../../../assets/settings.json";
-
-$padding: .8rem;
-$page-top: 32px + 42px + 20px + 10px;
 
 /*
+$page-top: 32px + 42px + 20px + 10px;
 @import "admin/spinner";
 @import "admin/functions.color";
 @import "admin/hit-loader";
@@ -17,6 +14,28 @@ $page-top: 32px + 42px + 20px + 10px;
 @import "admin/hit-comments";
 @import "admin/hit-issue";
 */
+:root {
+	--hit-c-black: #000;
+	--hit-c-black-dark: #000;
+	--hit-c-black-light: #7C7C7B;
+	--hit-c-grey: #e5e5e5;
+	--hit-c-grey-light: #f8f8f8;
+	--hit-c-white: #fff;
+	--hit-c-blue: #0073aa;
+	--hit-c-red: #e3000b;
+	--hit-c-green: #1aaa55;
+	--hit-c-orange: #ff9c2f;
+
+	--hit-page-top: 32px + 42px + 20px + 10px;
+	--hit-padding: .8rem;
+	--hit-padding-small: .4rem;
+	--hit-padding-big: 1.6rem;
+}
+
+@import "admin/spinner";
 @import "admin/settings";
+@import "admin/loader";
+@import "admin/issues";
+@import "admin/issue";
 @import "admin/notice";
 @import "admin/page";

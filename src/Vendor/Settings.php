@@ -39,7 +39,6 @@ class Settings
 
 	private function __construct($key)
 	{
-
 		$this->parentPage      = 'options-general.php';
 		$this->prefix          = $key;
 		$this->capability      = 'administrator';

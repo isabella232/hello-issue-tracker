@@ -7,7 +7,7 @@
 	&__side {
 		width: 600px;
 		position: sticky;
-		top: $page-top;
+		top: var(--hit-page-top);
 	}
 
 	&__main {
