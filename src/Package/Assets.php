@@ -58,16 +58,16 @@ class Assets
 	public static function issueAttributes()
 	{
 		return [
-			'states'     => [
+			'state'    => [
 				'opened' => __('Open', 'hello-issue-tracker'),
 				'closed' => __('Closed', 'hello-issue-tracker'),
 			],
-			'priorities' => apply_filters('SayHello\IssueTracker\Priorities', [
+			'priority' => apply_filters('SayHello\IssueTracker\Priorities', [
 				'low'    => __('Low', 'hello-issue-tracker'),
 				'normal' => __('Normal', 'hello-issue-tracker'),
 				'high'   => __('High', 'hello-issue-tracker'),
 			]),
-			'types'      => apply_filters('SayHello\IssueTracker\Types', [
+			'type'     => apply_filters('SayHello\IssueTracker\Types', [
 				'bug'     => __('Bug', 'hello-issue-tracker'),
 				'feature' => __('Feature', 'hello-issue-tracker'),
 			]),

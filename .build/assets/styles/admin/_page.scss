@@ -8,9 +8,10 @@
 		width: 600px;
 		position: sticky;
 		top: var(--hit-page-top);
+		margin-right: 2rem;
 	}
 
 	&__main {
-		width: calc(100% - 600px);
+		width: calc(100% - 600px - 2rem);
 	}
 }

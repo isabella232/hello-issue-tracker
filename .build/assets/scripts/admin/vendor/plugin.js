@@ -15,7 +15,7 @@ if ('HelloIssueTrackerConfig' in window) {
     });
 }
 
-export const strings = (key: string) => {
+export const strings = (key: string): string => {
     if (key in pluginStrings) {
         return pluginStrings[key];
     }

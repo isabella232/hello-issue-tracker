@@ -2,7 +2,6 @@
 	display: flex;
 	width: 100%;
 	border-bottom: 1px solid #e5e5e5;
-	cursor: pointer;
 	transition: all 400ms;
 	position: relative;
 
@@ -46,11 +45,12 @@
 		color: var(--hit-c-green);
 	}
 
-	&__title, &__id {
+	&__title, &__id, &__link {
 		margin: 0;
 		font-size: 1.2rem;
 		line-height: 1;
 		font-weight: 600;
+		text-decoration: none;
 	}
 
 	&__created {
@@ -84,8 +84,20 @@
 		vertical-align: middle !important;
 	}
 
+	&__link {
+		&:after {
+			display: block;
+			content: '';
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			left: 0;
+			top: 0;
+		}
+	}
+
 	&:hover {
-		background-color: pink;
+		background-color: var(--hit-c-gray-light);
 
 		.hit-issue-list__id {
 			color: rgba(#000, .2);
@@ -130,7 +142,7 @@
 		}
 	}
 
-	&--prio {
+	&--priority {
 		&-high {
 			background-color: var(--hit-c-red);
 		}

@@ -6,7 +6,7 @@ let isActive: boolean = false;
 let timeout: TimeoutID;
 const showFor: number = 5000;
 
-function getContainer() {
+function getContainer(): HTMLElement {
     let $container: HTMLElement = querySelector(body, '#hit-feedback');
     if (!$container) {
         body.innerHTML += '<div id="hit-feedback" class="hit-notice-float"></div>';
@@ -15,9 +15,9 @@ function getContainer() {
     return $container;
 }
 
-function showFeedback(text: string, feedbackClass: 'message' | 'error' | 'warn' | 'success' = 'message') {
+function showFeedback(text: string, feedbackClass: 'message' | 'error' | 'warn' | 'success' = 'message'): void {
 
-    const $container: HTMLElement = getContainer();
+    const $container = getContainer();
     if (!$container) {
         return;
     }
@@ -43,7 +43,7 @@ function showFeedback(text: string, feedbackClass: 'message' | 'error' | 'warn' 
 }
 
 function hideFeedback() {
-    const $container: HTMLElement = getContainer();
+    const $container = getContainer();
     $container.classList.remove('hit-notice-float--visible');
     isActive = false;
     clearTimeout(timeout);

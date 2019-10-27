@@ -37,8 +37,8 @@ class SettingsPage
 		$repoPath         = untrailingslashit(substr($repoUrlParts['path'], 1));
 		$token            = $data['private-token'];
 
-		$apiBase  = "{$repoBaseUrl}api/v4/projects/";
-		$response = wp_remote_get($apiBase . urlencode($repoPath) . "/?private_token={$token}");
+		$apiBase  = "{$repoBaseUrl}api/v4/";
+		$response = wp_remote_get($apiBase . 'projects/' . urlencode($repoPath) . "/?private_token={$token}");
 		if (is_wp_error($response) || 200 != $response['response']['code']) {
 			update_option(helloissuetracker()->prefix . '-repo-error', new \WP_Error('hit-repo-error', __('Repository could not be verified', 'hello-issue-tracker')));
 
@@ -54,6 +54,7 @@ class SettingsPage
 		}
 
 		update_option(helloissuetracker()->prefix . '-repo-error', false);
+		update_option(helloissuetracker()->prefix . '-repo-api-base', $apiBase);
 		update_option(helloissuetracker()->prefix . '-repo-id', $values['id']);
 
 		return $data;
@@ -65,7 +66,12 @@ class SettingsPage
 			'repoUrl'      => helloissuetracker()->settings->get('repo-url'),
 			'privateToken' => helloissuetracker()->settings->get('private-token'),
 			'repoId'       => intval(get_option(helloissuetracker()->prefix . '-repo-id')),
+			'apiBase'      => get_option(helloissuetracker()->prefix . '-repo-api-base'),
 		];
+
+		$vars['labelPrefix'] = apply_filters('hit_label_prefix', 'wp_');
+		$vars['user']        = wp_get_current_user()->user_email;
+		$vars['dateFormat']  = __('MMMM Do YYYY, h:mm a', 'hello-issue-tracker');
 
 		return $vars;
 	}
@@ -76,10 +82,15 @@ class SettingsPage
 			'repo-url-not-set' => __('Repository could not be verified', 'hello-issue-tracker'),
 			'state'            => __('Status', 'hello-issue-tracker'),
 			'create-issue'     => __('Create Issue', 'hello-issue-tracker'),
+			'edit-issue'       => __('Edit Issue', 'hello-issue-tracker'),
+			'close-issue'      => __('Close Issue', 'hello-issue-tracker'),
 			'id'               => __('ID', 'hello-issue-tracker'),
 			'title'            => __('Title', 'hello-issue-tracker'),
 			'type'             => __('Type', 'hello-issue-tracker'),
 			'priority'         => __('Priority', 'hello-issue-tracker'),
+			'author'           => __('Author', 'hello-issue-tracker'),
+			'add-new-comment'  => __('Add new comment', 'hello-issue-tracker'),
+			'add-comment'      => __('Add new comment', 'hello-issue-tracker'),
 		]);
 
 		return $strings;
