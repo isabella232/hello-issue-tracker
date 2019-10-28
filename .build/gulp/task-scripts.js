@@ -1,12 +1,11 @@
 import gulp from 'gulp';
 
-import webpack from 'webpack';
 import gulpWebpack from 'webpack-stream';
 import livereload from 'gulp-livereload';
 import VueLoaderPlugin from 'vue-loader/lib/plugin';
 import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
-import fs from "fs";
+import fs from 'fs';
 
 import babelloader from 'babel-loader';
 
@@ -21,56 +20,59 @@ function getDirectories(path) {
 export const task = config => {
 	return new Promise(resolve => {
 		const bundles = getDirectories(`${config.assetsBuild}scripts/`);
-		let loaded = 0;
+		const entry = {};
 		bundles.forEach(bundle => {
-			gulp.src([
-				`${config.assetsBuild}scripts/${bundle}/*.js`
-			])
-			// Webpack
-				.pipe(
-					gulpWebpack({
-						mode: 'development',
-						module: {
-							rules: [
-								{
-									test: /\.(js|jsx)$/,
-									exclude: /node_modules/,
-									use: ['babel-loader']
-								}
-							]
-						},
-						resolve: {
-							extensions: ['*', '.js', '.jsx']
-						},
-						optimization: {
-							minimize: false
-						},
-						output: {
-							filename: `${bundle}.js`
-						},
-						externals: {
-							"react": "React",
-							"react-dom": "ReactDOM"
-						}
-					}, webpack)
-				)
-				.on('error', config.errorLog)
-				.pipe(gulp.dest(config.assetsDir + 'scripts/'))
-
-				// Minify
-				.pipe(uglify())
-				.pipe(rename({
-					suffix: '.min'
-				}))
-				.on('error', config.errorLog)
-				.pipe(gulp.dest(config.assetsDir + 'scripts/'))
-
-				//reload
-				.pipe(livereload());
-			loaded++;
-			if (loaded === bundles.length) {
-				resolve();
+			const filePath = `${config.assetsBuild}scripts/${bundle}/index.js`;
+			if (fs.existsSync(filePath)) {
+				entry[bundle] = './' + filePath;
 			}
 		});
+
+		gulp.src([
+			`${config.assetsBuild}scripts/*`
+		])
+		// Webpack
+			.pipe(
+				gulpWebpack({
+					entry,
+					mode: 'development',
+					module: {
+						rules: [
+							{
+								test: /\.(js|jsx)$/,
+								exclude: /node_modules/,
+								use: ['babel-loader']
+							}
+						]
+					},
+					resolve: {
+						extensions: ['*', '.js', '.jsx']
+					},
+					optimization: {
+						minimize: false
+					},
+					output: {
+						filename: '[name].js'
+					},
+					externals: {
+						"react": "React",
+						"react-dom": "ReactDOM"
+					}
+				})
+			)
+			.on('error', config.errorLog)
+			.pipe(gulp.dest(config.assetsDir + 'scripts/'))
+
+			// Minify
+			.pipe(uglify())
+			.pipe(rename({
+				suffix: '.min'
+			}))
+			.on('error', config.errorLog)
+			.pipe(gulp.dest(config.assetsDir + 'scripts/'))
+
+			//reload
+			.pipe(livereload());
+		resolve();
 	});
 };

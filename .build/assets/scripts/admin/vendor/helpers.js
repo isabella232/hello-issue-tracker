@@ -3,6 +3,7 @@
 import type {IssueObject, CommentObject} from './types';
 import moment from 'moment';
 import {config} from './plugin';
+import showdown from 'showdown';
 
 export function snakeToCamel(s: string): string {
 	return s.replace(/(\-\w)/g, function (m) {

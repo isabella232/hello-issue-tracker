@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./.build/assets/scripts/tinymce/hitimage.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./.build/assets/scripts/tinymce/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,6 +94,18 @@
 /***/ (function(module, exports) {
 
 eval("(function ($) {\n  var frame;\n  var vars = window.HelloIssueTrackerTinyMCEVars.hitimage;\n  tinymce.create('tinymce.plugins.hitimage', {\n    init: function init(ed, url) {\n      //spacer\n      ed.addButton('hitimage', {\n        title: vars.texts.title,\n        image: vars.image,\n        onclick: function onclick() {\n          frame = wp.media({\n            title: vars.texts.selectOrUpload,\n            button: {\n              text: vars.texts.select\n            },\n            multiple: false\n          });\n          frame.on('select', function () {\n            var img = frame.state().get('selection').first().toJSON();\n            var imgUrl = img.url;\n\n            if ('large' in img.sizes) {\n              console.log('large');\n              imgUrl = img.sizes.large.url;\n            }\n\n            ed.selection.setContent(\"<img alt=\\\"\".concat(img.name, \"\\\" src=\\\"\").concat(imgUrl, \"\\\" />\"));\n          });\n          frame.open();\n        }\n      });\n    },\n    createControl: function createControl(n, cm) {\n      return null;\n    }\n  });\n  tinymce.PluginManager.add('hitimage', tinymce.plugins.hitimage);\n})(jQuery);\n\n//# sourceURL=webpack:///./.build/assets/scripts/tinymce/hitimage.js?");
+
+/***/ }),
+
+/***/ "./.build/assets/scripts/tinymce/index.js":
+/*!************************************************!*\
+  !*** ./.build/assets/scripts/tinymce/index.js ***!
+  \************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _hitimage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hitimage */ \"./.build/assets/scripts/tinymce/hitimage.js\");\n/* harmony import */ var _hitimage__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_hitimage__WEBPACK_IMPORTED_MODULE_0__);\n\n\n//# sourceURL=webpack:///./.build/assets/scripts/tinymce/index.js?");
 
 /***/ })
 
