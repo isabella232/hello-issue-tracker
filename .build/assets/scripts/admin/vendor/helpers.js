@@ -3,7 +3,7 @@
 import type {IssueObject, CommentObject} from './types';
 import moment from 'moment';
 import {config} from './plugin';
-import showdown from 'showdown';
+import {md2html} from './showdown';
 
 export function snakeToCamel(s: string): string {
 	return s.replace(/(\-\w)/g, function (m) {
@@ -42,7 +42,7 @@ export function parseIssue(issue: Object): IssueObject {
 	return {
 		iid: issue.iid,
 		title: issue.title,
-		description: issue.description,
+		description: md2html(issue.description),
 		author: issue.author.name,
 		authorLabel: hitLabels.author,
 		date: moment(issue.created_at).format(config.dateFormat),
@@ -57,6 +57,7 @@ export function parseIssue(issue: Object): IssueObject {
 export function parseComment(comment: Object): CommentObject {
 
 	let body = comment.body || '';
+	body = md2html(body);
 	let author = comment.author.name;
 	const pPrefix = config.labelPrefix.replace('<p>', '').replace('</p>', '');
 
@@ -68,8 +69,8 @@ export function parseComment(comment: Object): CommentObject {
 	}
 
 	return {
-		body: body,
-		author: author,
+		body,
+		author,
 		date: moment(comment.created_at).format(config.dateFormat),
 	};
 }

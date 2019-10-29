@@ -1,7 +1,7 @@
 (function ($) {
 
 	let frame;
-	const vars = window.HelloIssueTrackerTinyMCEVars.hitimage;
+	const vars = HelloIssueTrackerTinyMCEVars.hitimage;
 
 	tinymce.create('tinymce.plugins.hitimage', {
 		init: function (ed, url) {

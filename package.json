@@ -1,6 +1,7 @@
 {
   "name": "hello-issue-tracker",
   "dependencies": {
+    "@tinymce/tinymce-react": "^3.3.2",
     "moment": "^2.22.2",
     "showdown": "^1.9.0"
   },
@@ -25,7 +26,6 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-svgmin": "^2.2.0",
     "gulp-uglify": "^2.0.1",
-    "path": "^0.12.7",
     "prettier": "1.18.2",
     "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
@@ -48,7 +48,7 @@
       "@babel/plugin-proposal-class-properties"
     ]
   },
-  "version": "0.1.23",
+  "version": "0.1.24",
   "main": "gulpfile.babel.js",
   "browserslist": [
     "> 1%",

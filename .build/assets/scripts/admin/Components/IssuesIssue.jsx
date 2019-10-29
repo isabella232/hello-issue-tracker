@@ -51,7 +51,7 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 		}
 
 		const issue = this.state.issue;
-		console.log(issue);
+		//console.log(issue);
 
 		return (
 			<div className={this.props.className + ' hit-issue'}>
@@ -63,7 +63,8 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 						<button className="button button--close" data-iid={issue.iid}>
 							{strings('close-issue')}
 						</button>
-					) && (
+					)}
+					{(issue.state === 'opened') && (
 						<button className="button button-primary" data-iid={issue.iid}>
 							{strings('edit-issue')}
 						</button>

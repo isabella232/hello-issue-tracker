@@ -82,5 +82,6 @@ export type IssuesIssueCommentsCompProps = {
 	issue: IssueObject,
 };
 export type IssuesIssueCommentsCompState = {
-	comments: Array<CommentObject>
+	comments: Array<CommentObject>,
+	newComment: string,
 };

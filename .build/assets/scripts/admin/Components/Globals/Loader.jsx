@@ -3,26 +3,26 @@
 import React from 'react';
 
 type Props = {
-    className: string
+	className?: string
 };
 
-const LoaderSnippet = ({className}: Props) => {
-    return <div className={className + ' hit-loader'}/>
+export const Loader = ({className}: Props) => {
+	return <div className={className + ' hit-loader'}/>
 };
 
-export const Loader = LoaderSnippet;
+//export const Loader = LoaderSnippet;
 export const LoaderContainer = ({className}: Props) => {
-    return (
-        <div className={className + ' hit-loader-container'}>
-            <LoaderSnippet/>
-        </div>
-    );
+	return (
+		<div className={className + ' hit-loader-container'}>
+			<Loader/>
+		</div>
+	);
 };
 
-LoaderSnippet.defaultProps = {
-    className: ''
+Loader.defaultProps = {
+	className: ''
 };
 
 LoaderContainer.defaultProps = {
-    className: ''
+	className: ''
 };
