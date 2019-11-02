@@ -1,0 +1,29 @@
+.hit-edit {
+	width: 90vw;
+	max-width: 600px;
+	&__label {
+		font-weight: 700;
+		padding-right: var(--hit-padding);
+		width: 70px;
+	}
+	&__input {
+		padding: var(--hit-padding-small);
+		line-height: 1;
+		border: 1px solid #e5e5e5;
+		border-radius: 3px;
+		width: calc(100% - 70px);
+	}
+
+	&__element {
+		display: flex;
+		align-items: center;
+		+ .hit-edit__element {
+			margin-top: var(--hit-padding-big);
+		}
+		&--controls {
+			flex-direction: row-reverse;
+		}
+	}
+
+	position: relative;
+}

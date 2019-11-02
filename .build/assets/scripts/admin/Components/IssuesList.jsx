@@ -4,11 +4,24 @@ import React from 'react';
 import {config, strings} from './../vendor/plugin';
 import {LoaderContainer} from './Globals/Loader';
 import {fetchIssues} from '../vendor/api';
-import type {IssuesListCompProps, IssuesListCompState, IssueObject} from './../vendor/types';
+import type {IssueObject} from './../vendor/types';
 
+import Edit from './Edit';
 import IssueListItem from './IssueList/Item';
 
-class IssuesList extends React.Component<IssuesListCompProps, IssuesListCompState> {
+export type props = {
+	className?: string
+};
+
+export type state = {
+	states: Object,
+	activeState: string,
+	issues: Array<IssueObject>,
+	loading: boolean,
+	newIssue: boolean,
+};
+
+class IssuesList extends React.Component<props, state> {
 	static defaultProps = {
 		className: '',
 	};
@@ -17,6 +30,8 @@ class IssuesList extends React.Component<IssuesListCompProps, IssuesListCompStat
 		states: config.issueAttributes.state,
 		activeState: Object.keys(config.issueAttributes.state)[0],
 		issues: [],
+		loading: true,
+		newIssue: false,
 	};
 
 	changeIssueStates = (event: SyntheticInputEvent<HTMLSelectElement>): void => {
@@ -31,9 +46,10 @@ class IssuesList extends React.Component<IssuesListCompProps, IssuesListCompStat
 		this.loadIssues(this.state.activeState);
 	}
 
-	loadIssues = async (state: string): any => {
-		fetchIssues({state}).then(issues => this.setState({issues}));
-	};
+	loadIssues = async (state: string): any => fetchIssues({state}).then(issues => this.setState({
+		issues,
+		loading: false,
+	}));
 
 	render() {
 		return (
@@ -51,7 +67,7 @@ class IssuesList extends React.Component<IssuesListCompProps, IssuesListCompStat
 							</select>
 						</div>
 					</form>
-					<button className="hit-issues__add-issue button button-primary js-hit-create-issue">
+					<button className="hit-issues__add-issue button button-primary js-hit-create-issue" onClick={() => this.setState({newIssue: true})}>
 						{strings('create-issue')}
 					</button>
 				</div>
@@ -61,12 +77,13 @@ class IssuesList extends React.Component<IssuesListCompProps, IssuesListCompStat
 					<div className="hit-issue-list__item">{strings('type')}</div>
 					<div className="hit-issue-list__item">{strings('priority')}</div>
 				</div>
-				{this.state.issues.length === 0 && <LoaderContainer className="hit-issues__loader"/>}
+				{this.state.loading && <LoaderContainer className="hit-issues__loader"/>}
 				<div className="hit-issues__list">
 					{this.state.issues.map((issue: IssueObject) => {
 						return <IssueListItem issue={issue}/>;
 					})}
 				</div>
+				{this.state.newIssue && <Edit close={() => this.setState({newIssue: false})}/>}
 			</div>
 		)
 	}

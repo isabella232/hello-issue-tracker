@@ -51,6 +51,7 @@ class Plugin
 			echo '<div class="wrap">';
 			echo '<h1>' . $this->name . '</h1>';
 			echo '<div id="hello-issue-tracker"></div>';
+			echo '<div id="hello-issue-tracker-shadowbox"></div>';
 			echo '</div>';
 		}, 'dashicons-tickets-alt', 2);
 	}

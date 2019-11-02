@@ -2,10 +2,19 @@
 
 import React from 'react';
 import {config, strings} from './../../vendor/plugin';
-import type {IssuesListItemCompProps, IssuesListItemCompState} from './../../vendor/types';
+import type {IssueObject} from './../../vendor/types';
 import {formatIssueAttributes} from './../../vendor/helpers';
 
-class Item extends React.Component<IssuesListItemCompProps, IssuesListItemCompState> {
+export type props = {
+	className?: string,
+	issue: IssueObject,
+};
+
+export type state = {
+	states: Object,
+};
+
+class Item extends React.Component<props, state> {
 	static defaultProps = {
 		className: '',
 	};

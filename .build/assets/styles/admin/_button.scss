@@ -1,0 +1,20 @@
+#hello-issue-tracker-shadowbox,
+#hello-issue-tracker {
+	button[disabled] {
+		color: transparent !important;
+		position: relative;
+		text-shadow: none !important;
+		pointer-events: none;
+
+		&:after {
+			@include spinner(2px solid #fff, 1em);
+			content: '';
+			margin-top: -.5em;
+			margin-left: -.5em;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translateY(-50%) translateX(-50%);
+		}
+	}
+}

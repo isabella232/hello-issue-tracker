@@ -2,14 +2,24 @@
 
 import React from 'react';
 import {config, strings} from './../vendor/plugin';
-import type {IssuesIssueCompState, IssuesIssueCompProps} from './../vendor/types';
+import type {IssueObject} from './../vendor/types';
 import {fetchIssues} from './../vendor/api';
 import {formatIssueAttributes} from '../vendor/helpers';
 
+import Edit from './Edit';
 import {LoaderContainer} from './Globals/Loader';
 import Comments from './IssuesIssue/Comments';
 
-class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompState> {
+export type props = {
+	className?: string
+};
+export type state = {
+	issueId: number,
+	issue: IssueObject,
+	editIssue: boolean,
+};
+
+class IssuesIssue extends React.Component<props, state> {
 
 	static defaultProps = {
 		className: '',
@@ -18,6 +28,7 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 	state = {
 		issueId: parseInt(window.location.hash.replace('#', '')) || 0,
 		issue: {},
+		editIssue: false,
 	};
 
 	componentDidMount() {
@@ -51,7 +62,6 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 		}
 
 		const issue = this.state.issue;
-		//console.log(issue);
 
 		return (
 			<div className={this.props.className + ' hit-issue'}>
@@ -65,7 +75,7 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 						</button>
 					)}
 					{(issue.state === 'opened') && (
-						<button className="button button-primary" data-iid={issue.iid}>
+						<button className="button button-primary" data-iid={issue.iid} onClick={() => this.setState({editIssue: true})}>
 							{strings('edit-issue')}
 						</button>
 					)}
@@ -95,6 +105,7 @@ class IssuesIssue extends React.Component<IssuesIssueCompProps, IssuesIssueCompS
 				</div>
 				<div className="hit-issue__description" dangerouslySetInnerHTML={{__html: issue.description}}/>
 				<Comments className="hit-issue__comments" issue={issue}/>
+				{this.state.editIssue && <Edit close={() => this.setState({editIssue: false})} issue={issue}/>}
 			</div>
 		);
 

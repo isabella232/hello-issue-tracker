@@ -45,6 +45,21 @@
 		margin-top: var(--hit-padding-big);
 	}
 
+	&__form-title {
+		margin: 0 0 1rem 0;
+	}
+
+	&__form-controls {
+		margin: 1rem 0 0 0;
+		text-align: right;
+	}
+
+	&__comment-content {
+		& > * + * {
+			margin-top: var(--hit-padding) !important;
+		}
+	}
+
 	&__comment-meta {
 		display: block;
 		margin-top: var(--hit-padding-big);

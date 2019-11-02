@@ -20,9 +20,9 @@ export const LoaderContainer = ({className}: Props) => {
 };
 
 Loader.defaultProps = {
-	className: ''
+	className: '',
 };
 
 LoaderContainer.defaultProps = {
-	className: ''
+	className: '',
 };

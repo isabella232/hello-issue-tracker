@@ -2,13 +2,26 @@
 
 import React from 'react';
 import {config, strings} from './../../vendor/plugin';
-import type {IssuesIssueCommentsCompProps, IssuesIssueCommentsCompState} from './../../vendor/types';
+import {html2md} from './../../vendor/showdown';
+import {createComment} from './../../vendor/api';
+import type {CommentObject, IssueObject} from './../../vendor/types';
 import {fetchComments} from './../../vendor/api';
 
 import {Editor} from './../Globals/Editor';
 import {LoaderContainer} from './../Globals/Loader';
 
-class Comments extends React.Component<IssuesIssueCommentsCompProps, IssuesIssueCommentsCompState> {
+export type props = {
+	className?: string,
+	issue: IssueObject,
+};
+export type state = {
+	comments: Array<CommentObject>,
+	newComment: string,
+	newCommentLoading: boolean,
+	loading: boolean,
+};
+
+class Comments extends React.Component<props, state> {
 	static defaultProps = {
 		className: '',
 	};
@@ -16,31 +29,50 @@ class Comments extends React.Component<IssuesIssueCommentsCompProps, IssuesIssue
 	state = {
 		comments: [],
 		newComment: '',
+		newCommentLoading: false,
+		loading: true,
 	};
 
 	componentDidMount() {
-		console.log('mounted');
-		fetchComments(this.props.issue.iid).then(comments => this.setState({comments}));
+		fetchComments(this.props.issue.iid).then(comments => this.setState({
+			comments,
+			loading: false,
+		}));
 	}
 
-	componentDidUpdate() {
-		console.log('updated');
-		console.log(document.querySelector('#hit-edit-comment-body'));
-	}
+	submit = (e) => {
+		e.preventDefault();
+		let comment = this.state.newComment;
+		comment += `<p>${config.labelPrefix}author: ${config.user}</p>`;
+		comment = html2md(comment);
+		this.setState({
+			newCommentLoading: true,
+		});
+		createComment(this.props.issue.iid, comment)
+			.then(r => {
+				fetchComments(this.props.issue.iid).then(comments => this.setState({
+					comments,
+					newCommentLoading: false,
+					newComment: '',
+				}));
+			})
+			.catch(r => {
+				console.log(r);
+			});
+	};
 
 	render() {
 		return (
 			<div className="hit-comments">
-				{(this.state.comments.length === 0) && (
+				{this.state.loading && (
 					<LoaderContainer/>
 				)}
 				{(this.state.comments.length !== 0) && (
 					<ul className="hit-comments__list">
 						{this.state.comments.map(comment => {
-							console.log(comment);
 							return (
 								<li className="hit-comments__comment-item">
-									<div dangerouslySetInnerHTML={{__html: comment.body}}/>
+									<div className="hit-comments__comment-content" dangerouslySetInnerHTML={{__html: comment.body}}/>
 									<span className="hit-comments__comment-meta">
 										<b>{comment.author}</b> / {comment.date}
 									</span>
@@ -49,16 +81,13 @@ class Comments extends React.Component<IssuesIssueCommentsCompProps, IssuesIssue
 						})}
 					</ul>
 				)}
-				<form action="" className="hit-comments__form hit-edit">
-					<input type="hidden" name="iid" value="${issue.iid || 'new'}"/>
-					<div className="hit-edit__element">
-						<p><b>{strings('add-new-comment')}</b></p>
-					</div>
-					<div className="hit-edit__element">
-						<Editor value={this.state.newComment} onChange={val => this.setState({newComment: val})}/>
-					</div>
-					<div className="hit-edit__element hit-edit__element--controls">
-						<button type="submit" className="button button-primary">
+				<form className="hit-comments__form" onSubmit={this.submit}>
+					<h2 className="hit-comments__form-title">
+						{strings('add-new-comment')}
+					</h2>
+					<Editor value={this.state.newComment} onChange={val => this.setState({newComment: val})} plugins={['autoresize']}/>
+					<div className="hit-comments__form-controls">
+						<button type="submit" className="button button-primary" disabled={this.state.newCommentLoading}>
 							{strings('add-comment')}
 						</button>
 					</div>

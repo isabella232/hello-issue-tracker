@@ -83,6 +83,7 @@ class SettingsPage
 			'state'            => __('Status', 'hello-issue-tracker'),
 			'create-issue'     => __('Create Issue', 'hello-issue-tracker'),
 			'edit-issue'       => __('Edit Issue', 'hello-issue-tracker'),
+			'update-issue'     => __('Update Issue', 'hello-issue-tracker'),
 			'close-issue'      => __('Close Issue', 'hello-issue-tracker'),
 			'id'               => __('ID', 'hello-issue-tracker'),
 			'title'            => __('Title', 'hello-issue-tracker'),

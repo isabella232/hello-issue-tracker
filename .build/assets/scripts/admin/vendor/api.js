@@ -12,10 +12,9 @@ export const doApi: Function = async (path: string, data: ApiFetchData = {}, met
 
 	const urlParams: Array<string> = [];
 	Object.keys(data).forEach(key => {
-			urlParams.push(`${key}=${encodeURI(data[key])}`);
-		}
-	);
-	const url: string = config.gitlab.apiBase + path + '?' + urlParams.join('&');
+		urlParams.push(`${key}=${encodeURI(data[key]).replace(/#/g, '%23')}`);
+	});
+	const url: string = config.gitlab.apiBase + path + (urlParams.length ? '?' + urlParams.join('&') : '');
 
 	return fetch(url, {
 		method,
@@ -24,30 +23,6 @@ export const doApi: Function = async (path: string, data: ApiFetchData = {}, met
 			'PRIVATE-TOKEN': config.gitlab.privateToken
 		}
 	});
-	/*
-	return new Promise(resolve => {
-		const urlParams = [];
-		for (const [key, value] of Object.entries(data)) {
-			urlParams.push(`${key}=${encodeURI(value)}`);
-		}
-		const url = apiBase + path + '?' + urlParams.join('&');
-
-		jQuery.ajax({
-			type: type,
-			beforeSend: function (request) {
-				request.setRequestHeader(v);
-			},
-			url: url,
-			success: function (data) {
-				data.response = true;
-				resolve(data);
-			},
-			error: function () {
-				resolve({response: false});
-			},
-		});
-	});
-	*/
 };
 
 export const fetchIssues: Object = async (options: ApiFetchData = {}, iid: number = 0) => {
@@ -82,6 +57,20 @@ export const fetchComments: Array = async (iid) => {
 	});
 
 	return r;
+};
+
+export const createComment = (iid: number, comment: string) => {
+	return doApi(`projects/${config.gitlab.repoId}/issues/${iid}/notes`, {
+		body: comment,
+	}, 'POST');
+};
+
+export const createIssue = issue => {
+	return doApi(`projects/${config.gitlab.repoId}/issues`, issue, 'POST');
+};
+
+export const updateIssue = (iid, issue) => {
+	return doApi(`projects/${config.gitlab.repoId}/issues/${iid}`, issue, 'PUT');
 };
 
 /*

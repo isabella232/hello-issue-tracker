@@ -164,8 +164,11 @@
 	font-size: 16px;
 
 	p {
-		margin: 0;
 		font-size: 16px;
+	}
+
+	& > * + * {
+		margin-top: 1em;
 	}
 
 	&__created {
