@@ -1,4 +1,4 @@
-$side-width: 400px;
+$side-width: 450px;
 
 .hit-page {
 	margin-top: 30px;
@@ -12,12 +12,14 @@ $side-width: 400px;
 
 	&__side {
 		width: $side-width;
+		min-width: $side-width;
+		flex-basis: $side-width;
 		position: sticky;
 		top: var(--hit-page-top);
-		margin-right: 2rem;
+		margin-right: 1rem;
 	}
 
 	&__main {
-		width: calc(100% - #{$side-width} - 2rem);
+		width: 100%;
 	}
 }

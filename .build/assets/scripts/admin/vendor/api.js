@@ -56,7 +56,7 @@ export const fetchComments: Array = async (iid) => {
 		r.push(parseComment(comment));
 	});
 
-	return r;
+	return r.filter(comment => !comment.system);
 };
 
 export const createComment = (iid: number, comment: string) => {

@@ -91,6 +91,7 @@ export function parseComment(comment: Object): CommentObject {
 	return {
 		body,
 		author,
+		system: comment.system,
 		date: moment(comment.created_at).format(config.dateFormat),
 	};
 }

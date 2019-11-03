@@ -80,12 +80,6 @@ class IssuesList extends React.Component<props, state> {
 						{strings('create-issue')}
 					</button>
 				</div>
-				<div className="hit-issues__head hit-issue-list">
-					<div className="hit-issue-list__item">{strings('id')}</div>
-					<div className="hit-issue-list__item">{strings('title')}</div>
-					<div className="hit-issue-list__item">{strings('type')}</div>
-					<div className="hit-issue-list__item">{strings('priority')}</div>
-				</div>
 				{this.state.loading && <LoaderContainer className="hit-issues__loader"/>}
 				<div className="hit-issues__list">
 					{this.state.issues.map((issue: IssueObject) => {

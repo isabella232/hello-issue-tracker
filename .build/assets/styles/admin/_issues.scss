@@ -1,14 +1,15 @@
 .hit-issues {
 	background-color: #fff;
-	border: 1px solid #e5e5e5;
+	border: 1px solid var(--hit-c-gray);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 	min-height: 400px;
 
 	&__header {
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: 1px solid var(--hit-c-gray);
 		display: flex;
 		padding: var(--hit-padding);
 		align-items: center;
+		background-color: var(--hit-c-gray-light);
 	}
 
 	&__add-issue {
@@ -45,12 +46,8 @@
 	&__head {
 		width: 100%;
 		border-spacing: 0;
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: 1px solid var(--hit-c-gray);
 		background-color: var(--hit-c-gray-light);
-
-		.hit-issue-list__item:first-child {
-			text-align: center;
-		}
 	}
 
 	&__list {
