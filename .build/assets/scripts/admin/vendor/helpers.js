@@ -39,6 +39,8 @@ export function prepareIssueForList(issue: apiIssueObject): IssueObject {
 		}
 	}
 
+	moment.locale(config.locale.split('_')[0]);
+
 	return {
 		iid: issue.iid,
 		title: issue.title,
@@ -87,6 +89,8 @@ export function parseComment(comment: Object): CommentObject {
 		author = regexExec[1];
 		body = body.replace(regexExec[0], '');
 	}
+
+	moment.locale(config.locale.split('_')[0]);
 
 	return {
 		body,

@@ -1,0 +1,150 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Hello Issue Tracker\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-03 21:14+0000\n"
+"PO-Revision-Date: 2019-11-03 21:16+0000\n"
+"Last-Translator: Nico Martin <nico@vir2al.ch>\n"
+"Language-Team: \n"
+"Language: de_CH\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.1; wp-5.2.4"
+
+#. Description of the plugin
+msgid ""
+"A WordPress Plugin to create, edit and delete Gitlab Issues right from the "
+"WP-Admin"
+msgstr ""
+
+#: src/Package/Assets.php:66
+msgid "Add Image"
+msgstr ""
+
+#: src/Package/SettingsPage.php:93 src/Package/SettingsPage.php:94
+msgid "Add new comment"
+msgstr ""
+
+#: src/Package/SettingsPage.php:95
+msgid "Are you sure you want to close this issue?"
+msgstr ""
+
+#: src/Package/SettingsPage.php:92
+msgid "Author"
+msgstr ""
+
+#: src/Package/Assets.php:101
+msgid "Bug"
+msgstr ""
+
+#: src/Package/SettingsPage.php:87
+msgid "Close Issue"
+msgstr ""
+
+#: src/Package/Assets.php:93
+msgid "Closed"
+msgstr ""
+
+#: src/Package/SettingsPage.php:84
+msgid "Create Issue"
+msgstr ""
+
+#: src/Package/SettingsPage.php:85
+msgid "Edit Issue"
+msgstr ""
+
+#: src/Package/SettingsPage.php:110
+msgid "Einstellungen"
+msgstr ""
+
+#: src/Package/Assets.php:102
+msgid "Feature"
+msgstr ""
+
+#: src/Package/SettingsPage.php:28
+msgid "Gitlab Private Token"
+msgstr ""
+
+#. Name of the plugin
+msgid "Hello Issue Tracker"
+msgstr ""
+
+#: src/Package/Assets.php:98
+msgid "High"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://github.com/SayHelloGmbH/hello-issue-tracker"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://sayhello.ch"
+msgstr ""
+
+#: src/Package/SettingsPage.php:88
+msgid "ID"
+msgstr ""
+
+#: src/Package/Assets.php:96
+msgid "Low"
+msgstr ""
+
+#: src/Package/SettingsPage.php:74
+msgid "MMMM Do YYYY, h:mm a"
+msgstr ""
+
+#. Author of the plugin
+msgid "Nico Martin / Say Hello GmbH (nico@sayhello.chL)"
+msgstr ""
+
+#: src/Package/Assets.php:97
+msgid "Normal"
+msgstr ""
+
+#: src/Package/Assets.php:92
+msgid "Open"
+msgstr ""
+
+#: src/Package/SettingsPage.php:91
+msgid "Priority"
+msgstr ""
+
+#: src/Package/SettingsPage.php:43 src/Package/SettingsPage.php:51
+#: src/Package/SettingsPage.php:82
+msgid "Repository could not be verified"
+msgstr ""
+
+#: src/Package/SettingsPage.php:27
+msgid "Repository URL"
+msgstr ""
+
+#: src/Package/Assets.php:68
+msgid "Select image"
+msgstr ""
+
+#: src/Package/Assets.php:67
+msgid "Select or upload an image"
+msgstr ""
+
+#: src/Package/SettingsPage.php:26
+msgid "Settings"
+msgstr ""
+
+#: src/Package/SettingsPage.php:83
+msgid "Status"
+msgstr ""
+
+#: src/Package/SettingsPage.php:89
+msgid "Title"
+msgstr ""
+
+#: src/Package/SettingsPage.php:90
+msgid "Type"
+msgstr ""
+
+#: src/Package/SettingsPage.php:86
+msgid "Update Issue"
+msgstr ""

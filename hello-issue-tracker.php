@@ -7,7 +7,7 @@ Description: A WordPress Plugin to create, edit and delete Gitlab Issues right f
 Author: Nico Martin / Say Hello GmbH (nico@sayhello.chL)
 Version: react0.1.27
 Author URI: https://sayhello.ch
-Text Domain: hit
+Text Domain: hello-issue-tracker
 Domain Path: /languages
 */
 

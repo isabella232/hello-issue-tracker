@@ -15,6 +15,7 @@ export type PluginConfig = {
 	labelPrefix: string,
 	user: string,
 	dateFormat: string,
+	locale: string,
 };
 
 // API

@@ -71,7 +71,8 @@ class SettingsPage
 
 		$vars['labelPrefix'] = apply_filters('hit_label_prefix', 'wp_');
 		$vars['user']        = wp_get_current_user()->user_email;
-		$vars['dateFormat']  = __('MMMM Do YYYY, h:mm a', 'hello-issue-tracker');
+		$vars['locale']      = get_locale();
+		$vars['dateFormat']  = __('LLLL', 'hello-issue-tracker');
 
 		return $vars;
 	}
