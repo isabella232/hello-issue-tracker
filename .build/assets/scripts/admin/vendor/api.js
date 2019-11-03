@@ -1,7 +1,7 @@
 // @flow
 
 import {config} from "./plugin";
-import {parseComment, parseIssue} from "./helpers";
+import {parseComment, prepareIssueForList, prepareIssueForApi} from "./helpers";
 import type {ApiFetchData, ApiFetchMethod, IssueObject} from "./types";
 import moment from "moment/moment";
 
@@ -36,10 +36,10 @@ export const fetchIssues: Object = async (options: ApiFetchData = {}, iid: numbe
 
 	if (Array.isArray(issues)) {
 		issues.forEach(issue => {
-			r.push(parseIssue(issue));
+			r.push(prepareIssueForList(issue));
 		});
 	} else {
-		r.push(parseIssue(issues));
+		r.push(prepareIssueForList(issues));
 	}
 
 	return r;

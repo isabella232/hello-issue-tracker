@@ -3,8 +3,8 @@
 import React from 'react';
 import {config, strings} from './../vendor/plugin';
 import type {IssueObject} from './../vendor/types';
-import {fetchIssues} from './../vendor/api';
-import {formatIssueAttributes} from '../vendor/helpers';
+import {fetchIssues, updateIssue} from './../vendor/api';
+import {formatIssueAttributes, prepareIssueForApi, prepareIssueForList} from '../vendor/helpers';
 
 import Edit from './Edit';
 import {LoaderContainer} from './Globals/Loader';
@@ -17,6 +17,7 @@ export type state = {
 	issueId: number,
 	issue: IssueObject,
 	editIssue: boolean,
+	closeLoading: boolean,
 };
 
 class IssuesIssue extends React.Component<props, state> {
@@ -29,6 +30,7 @@ class IssuesIssue extends React.Component<props, state> {
 		issueId: parseInt(window.location.hash.replace('#', '')) || 0,
 		issue: {},
 		editIssue: false,
+		closeLoading: false,
 	};
 
 	componentDidMount() {
@@ -52,6 +54,41 @@ class IssuesIssue extends React.Component<props, state> {
 		fetchIssues({}, issueId).then(issues => this.setState({issue: issues[0]}));
 	}
 
+	closeIssue = async () => {
+
+		if (!confirm(strings('issue-should-close'))) {
+			return;
+		}
+
+		this.setState({
+			closeLoading: true,
+		});
+		let issue = {...this.state.issue};
+		issue.state = 'closed';
+		issue.state_event = 'close';
+		issue = prepareIssueForApi(issue);
+		const iid = issue.iid;
+		const response = await updateIssue(iid, issue);
+		let data = await response.json();
+
+		if (data.error) {
+			// Error!
+			alert(data.error);
+			this.setState({
+				closeLoading: false,
+			});
+			return;
+		}
+
+		const event = new CustomEvent('hit-list-closed');
+		document.dispatchEvent(event);
+
+		this.setState({
+			issue: prepareIssueForList(data),
+			closeLoading: false,
+		});
+	};
+
 	render() {
 		if (this.state.issueId === 0) {
 			return '';
@@ -67,10 +104,10 @@ class IssuesIssue extends React.Component<props, state> {
 			<div className={this.props.className + ' hit-issue'}>
 				<header className="hit-issue__header">
 					<span className="hit-issue__created">
-						<b>{issue.author}</b> / {issue.date}
+						<b>{issue.authorLabel || issue.author}</b> / {issue.date}
 					</span>
 					{(issue.state === 'opened') && (
-						<button className="button button--close" data-iid={issue.iid}>
+						<button className="button button--close" onClick={() => this.closeIssue()} disabled={this.state.closeLoading}>
 							{strings('close-issue')}
 						</button>
 					)}
@@ -105,7 +142,23 @@ class IssuesIssue extends React.Component<props, state> {
 				</div>
 				<div className="hit-issue__description" dangerouslySetInnerHTML={{__html: issue.description}}/>
 				<Comments className="hit-issue__comments" issue={issue}/>
-				{this.state.editIssue && <Edit close={() => this.setState({editIssue: false})} issue={issue}/>}
+				{this.state.editIssue && (
+					<Edit
+						close={(issue = {}) => {
+							let setIssue = this.state.issue;
+							if (Object.keys(issue).length !== 0) {
+								const event = new CustomEvent('hit-list-reload');
+								document.dispatchEvent(event);
+								setIssue = issue;
+							}
+							this.setState({
+								editIssue: false,
+								issue: setIssue,
+							})
+						}}
+						issue={issue}
+					/>
+				)}
 			</div>
 		);
 

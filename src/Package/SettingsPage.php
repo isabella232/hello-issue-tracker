@@ -79,19 +79,20 @@ class SettingsPage
 	public function addTranslations($strings)
 	{
 		$strings = array_merge($strings, [
-			'repo-url-not-set' => __('Repository could not be verified', 'hello-issue-tracker'),
-			'state'            => __('Status', 'hello-issue-tracker'),
-			'create-issue'     => __('Create Issue', 'hello-issue-tracker'),
-			'edit-issue'       => __('Edit Issue', 'hello-issue-tracker'),
-			'update-issue'     => __('Update Issue', 'hello-issue-tracker'),
-			'close-issue'      => __('Close Issue', 'hello-issue-tracker'),
-			'id'               => __('ID', 'hello-issue-tracker'),
-			'title'            => __('Title', 'hello-issue-tracker'),
-			'type'             => __('Type', 'hello-issue-tracker'),
-			'priority'         => __('Priority', 'hello-issue-tracker'),
-			'author'           => __('Author', 'hello-issue-tracker'),
-			'add-new-comment'  => __('Add new comment', 'hello-issue-tracker'),
-			'add-comment'      => __('Add new comment', 'hello-issue-tracker'),
+			'repo-url-not-set'   => __('Repository could not be verified', 'hello-issue-tracker'),
+			'state'              => __('Status', 'hello-issue-tracker'),
+			'create-issue'       => __('Create Issue', 'hello-issue-tracker'),
+			'edit-issue'         => __('Edit Issue', 'hello-issue-tracker'),
+			'update-issue'       => __('Update Issue', 'hello-issue-tracker'),
+			'close-issue'        => __('Close Issue', 'hello-issue-tracker'),
+			'id'                 => __('ID', 'hello-issue-tracker'),
+			'title'              => __('Title', 'hello-issue-tracker'),
+			'type'               => __('Type', 'hello-issue-tracker'),
+			'priority'           => __('Priority', 'hello-issue-tracker'),
+			'author'             => __('Author', 'hello-issue-tracker'),
+			'add-new-comment'    => __('Add new comment', 'hello-issue-tracker'),
+			'add-comment'        => __('Add new comment', 'hello-issue-tracker'),
+			'issue-should-close' => __('Are you sure you want to close this issue?', 'hello-issue-tracker'),
 		]);
 
 		return $strings;

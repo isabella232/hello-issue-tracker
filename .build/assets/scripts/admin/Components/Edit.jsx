@@ -4,7 +4,7 @@ import React from 'react';
 
 import {config, strings} from './../vendor/plugin';
 import type {IssueObject} from './../vendor/types';
-import {prepareIssue} from './../vendor/helpers';
+import {prepareIssueForApi, prepareIssueForList} from './../vendor/helpers';
 
 import {Editor} from './Globals/Editor';
 import ShadowBox from './Globals/ShadowBox';
@@ -59,7 +59,8 @@ class Edit extends React.Component<props, state> {
 	submit = async e => {
 		e.preventDefault();
 		this.setState({loading: true});
-		const issue = prepareIssue(this.state.issue);
+		const issue = prepareIssueForApi(this.state.issue);
+
 		const iid = issue.iid;
 
 		const isNew = iid === 0;
@@ -80,25 +81,14 @@ class Edit extends React.Component<props, state> {
 			alert(data.error);
 			return;
 		}
-		console.log(data);
 
-		/*
-		if (request.status >= 300) {
-			// Error!
-			alert('Error: Issue could not be saved');
-			return;
-		}
-
-		this.state.close;
-		console.log(request);
-
-		 */
+		this.props.close(prepareIssueForList(data));
 	};
 
 	render() {
 		const issue = this.state.issue;
 		return (
-			<ShadowBox close={this.props.close}>
+			<ShadowBox close={() => this.props.close()}>
 				<form className="hit-edit js-hit-edit-form" onSubmit={this.submit}>
 					<div className="hit-edit__element">
 						<label htmlFor="hit-edit-title" className="hit-edit__label">{strings('title')}</label>

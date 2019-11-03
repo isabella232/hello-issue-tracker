@@ -22,7 +22,6 @@
 						const img = frame.state().get('selection').first().toJSON();
 						let imgUrl = img.url;
 						if ('large' in img.sizes) {
-							console.log('large');
 							imgUrl = img.sizes.large.url
 						}
 						ed.selection.setContent(`<img alt="${img.name}" src="${imgUrl}" />`);

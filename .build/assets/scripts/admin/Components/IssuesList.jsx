@@ -44,6 +44,15 @@ class IssuesList extends React.Component<props, state> {
 
 	componentDidMount(): void {
 		this.loadIssues(this.state.activeState);
+		document.addEventListener('hit-list-reload', () => this.loadIssues(this.state.activeState));
+		document.addEventListener('hit-list-closed', () => {
+			this.loadIssues('closed');
+			this.setState({activeState: 'closed'})
+		});
+		document.addEventListener('hit-list-opened', () => {
+			this.loadIssues('opened');
+			this.setState({activeState: 'opened'})
+		});
 	}
 
 	loadIssues = async (state: string): any => fetchIssues({state}).then(issues => this.setState({
@@ -83,7 +92,18 @@ class IssuesList extends React.Component<props, state> {
 						return <IssueListItem issue={issue}/>;
 					})}
 				</div>
-				{this.state.newIssue && <Edit close={() => this.setState({newIssue: false})}/>}
+				{this.state.newIssue && (
+					<Edit close={(newIssue = {}) => {
+						if (Object.keys(newIssue).length !== 0) {
+							window.location.hash = newIssue.iid;
+							const event = new CustomEvent('hit-list-reload');
+							document.dispatchEvent(event);
+						}
+						this.setState({
+							newIssue: false,
+						})
+					}}/>
+				)}
 			</div>
 		)
 	}

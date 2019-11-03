@@ -40,6 +40,18 @@ export type IssueObject = {
 	},
 };
 
+export type apiIssueObject = {
+	iid: number,
+	title: string,
+	description: string,
+	author?: {
+		name?: string,
+	},
+	created_at: string,
+	state: 'closed' | 'opened',
+	labels: Array<string>,
+};
+
 // Comment
 export type CommentObject = {
 	body: string,

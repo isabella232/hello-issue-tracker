@@ -1,6 +1,6 @@
 // @flow
 
-import type {IssueObject, CommentObject} from './types';
+import type {IssueObject, apiIssueObject, CommentObject} from './types';
 import moment from 'moment';
 import {config} from './plugin';
 import {html2md, md2html} from './showdown';
@@ -21,7 +21,7 @@ export function formatIssueAttributes(category: string, key: string): string {
 	return config.issueAttributes[category][key];
 }
 
-export function parseIssue(issue: Object): IssueObject {
+export function prepareIssueForList(issue: apiIssueObject): IssueObject {
 
 	const hitLabels = {};
 	for (const label of issue.labels) {
@@ -54,6 +54,26 @@ export function parseIssue(issue: Object): IssueObject {
 	};
 }
 
+export function prepareIssueForApi(issue: IssueObject): apiIssueObject {
+
+	issue.description = html2md(issue.description);
+
+	issue.labels = [
+		`${config.labelPrefix}type: ${issue.hitLabels.type}`,
+		`${config.labelPrefix}priority: ${issue.hitLabels.priority}`
+	];
+
+	if (issue.iid === 0) {
+		issue.labels.push(`${config.labelPrefix}author: ${config.user}`);
+	} else {
+		if (issue.hitLabels.author && issue.hitLabels.author !== '') {
+			issue.labels.push(`${config.labelPrefix}author: ${issue.hitLabels.author}`);
+		}
+	}
+
+	return issue;
+}
+
 export function parseComment(comment: Object): CommentObject {
 
 	let body = comment.body || '';
@@ -73,24 +93,4 @@ export function parseComment(comment: Object): CommentObject {
 		author,
 		date: moment(comment.created_at).format(config.dateFormat),
 	};
-}
-
-export function prepareIssue(issue: IssueObject) {
-
-	issue.description = html2md(issue.description);
-
-	issue.labels = [
-		`${config.labelPrefix}type: ${issue.hitLabels.type}`,
-		`${config.labelPrefix}priority: ${issue.hitLabels.priority}`
-	];
-
-	if (issue.iid === 0) {
-		issue.labels.push(`${config.labelPrefix}author: ${config.user}`);
-	} else {
-		if (issue.hitLabels.author && issue.hitLabels.author !== '') {
-			issue.labels.push(`${config.labelPrefix}author: ${issue.hitLabels.author}`);
-		}
-	}
-
-	return issue;
 }

@@ -19,9 +19,9 @@ export default (props: {
 	return (
 		<Portal>
 			<div className="hit-shadowbox">
-				<div className="hit-shadowbox__shadow" onClick={() => props.close()}/>
+				<div className="hit-shadowbox__shadow" onClick={props.close}/>
 				<div className="hit-shadowbox__box">
-					<button className="hit-shadowbox__close" onClick={() => props.close()}>Close</button>
+					<button className="hit-shadowbox__close" onClick={props.close}>Close</button>
 					<div className="hit-shadowbox__content">
 						{props.children}
 					</div>
